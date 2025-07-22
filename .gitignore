@@ -1,0 +1,43 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+web_modules/
+.npm/ # Optional npm cache directory
+
+# Build output directories
+dist/
+dist-ssr/
+
+# Vite specific
+.vite/
+
+# Environments / Environment variables
+.env
+.env*.local # CRUCIAL: Ignora tus archivos .env.local que contienen la clave API
+*.local     # Ignora cualquier otro archivo con extensión .local (podría ser redundante si .env*.local ya cubre lo deseado, pero lo mantengo por si aplica a otros tipos de archivos)
+
+# Editor directories and files
+.vscode/        # Ignora la carpeta .vscode completa
+!.vscode/extensions.json # Excepto este archivo específico dentro de .vscode
+.idea/          # Archivos de JetBrains IDEs (IntelliJ, WebStorm, etc.)
+.DS_Store       # Archivos específicos de macOS
+*.suo           # Archivos de solución de Visual Studio
+*.ntvs* # Archivos de herramientas de Node.js para Visual Studio
+*.njsproj       # Proyectos de Node.js para Visual Studio
+*.sln           # Archivos de solución de Visual Studio
+*.sw?           # Archivos de swap de Vim (ej. .swp, .swo)
+
+# Optional eslint cache
+.eslintcache
+
+# Other system files
+Thumbs.db       # Archivos de miniaturas de Windows

@@ -1,0 +1,54 @@
+/* src/main.css */
+
+/* No hay directivas @tailwind aquí, ya que no estamos usando Tailwind CSS. */
+/* Todos los estilos generales o que no maneje Bootstrap van aquí. */
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f2f5; /* Tu color de fondo personalizado */
+  color: #333; /* Color de texto base, si no lo manejas con Bootstrap */
+}
+
+/* Puedes mantener estos si aún los usas y no los reemplazas con clases de Bootstrap */
+.home-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.buttons {
+  margin-top: 1.5rem;
+}
+
+/* Si quieres que Bootstrap maneje el estilo de tus botones,
+   NO INCLUYAS las siguientes reglas 'button' y 'button:hover'.
+   Si las incluyes, sobrescribirán el estilo por defecto de Bootstrap
+   a menos que uses clases de Bootstrap específicas en tus botones HTML. */
+/*
+button {
+  padding: 0.8rem 1.5rem;
+  margin: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+*/
+/* Estilo para el texto sugerido que será copiable */
+.suggestion-text-copyable {
+  cursor: copy; /* Indica que el texto es copiable */
+  text-decoration: underline dotted; /* Para que visualmente se vea que es interactivo */
+  transition: background-color 0.2s ease-in-out; /* Transición suave para el hover */
+}
+
+.suggestion-text-copyable:hover {
+  background-color: #e2e6ea; /* Un color de fondo claro al pasar el ratón */
+  border-radius: 3px; /* Bordes ligeramente redondeados al resaltar */
+}
