@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { Link } from 'react-router-dom';
 import { saveAs } from 'file-saver';
-import jsPDF from 'jspdf'; // Importa jspdf
-import 'jspdf-autotable'; // Importa jspdf-autotable
+import jsPDF from 'jspdf';
+import 'jspdf-autotable'; // <--- Importa esto así, después de jsPDF
 
 const Pasado = () => {
   const [data, setData] = useState([]);
@@ -48,34 +48,47 @@ const Pasado = () => {
     saveAs(blob, `tiempo_pasado_${new Date().toLocaleDateString()}.xlsx`);
   };
 
-  // Función para descargar como PDF
+  // Función para descargar como PDF - REVISADA
   const handleDownloadPdf = () => {
     const doc = new jsPDF();
+    
     const tableColumn = ["Tiempo", "Conjugación", "Tipo de oración", "Fórmula", "Ejemplo", "Traducción"];
-    const tableRows = [];
+    
+    const tableRows = data.map(row => [
+      row['tiempo'],
+      row['conjugacion'],
+      row['tipo de oracion'],
+      row['formula'],
+      row['ejemplo'],
+      row['traduccion']
+    ]);
 
-    data.forEach(row => {
-      const rowData = [
-        row['tiempo'],
-        row['conjugacion'],
-        row['tipo de oracion'],
-        row['formula'],
-        row['ejemplo'],
-        row['traduccion']
-      ];
-      tableRows.push(rowData);
-    });
+    doc.setFontSize(18);
+    doc.text("Tabla del Tiempo Pasado", 14, 20);
 
+    // Usa autoTable directamente
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
-      startY: 20, // Comienza la tabla un poco más abajo
-      didDrawPage: function(data) {
-        // Encabezado del documento
-        doc.setFontSize(16);
-        doc.text("Tabla del Tiempo Pasado", data.settings.margin.left, 15);
+      startY: 30,
+      styles: {
+        fontSize: 10,
+        cellPadding: 2,
+        halign: 'center'
+      },
+      headStyles: {
+        fillColor: '#E9ECEF',
+        textColor: '#495057',
+        fontStyle: 'bold'
+      },
+      bodyStyles: {
+        textColor: '#343A40'
+      },
+      alternateRowStyles: {
+        fillColor: '#F8F9FA'
       }
     });
+
     doc.save(`tiempo_pasado_${new Date().toLocaleDateString()}.pdf`);
   };
 
@@ -83,14 +96,14 @@ const Pasado = () => {
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="text-xl font-weight-bold">Tabla del Tiempo Pasado</h2>
-        <div className="d-flex gap-2"> {/* Contenedor para los botones con un pequeño espacio */}
+        <div className="d-flex gap-2">
           <Link to="/" className="btn btn-primary">
             Volver al Home
           </Link>
           <button onClick={handleDownloadExcel} className="btn btn-success">
             Descargar Excel
           </button>
-          <button onClick={handleDownloadPdf} className="btn btn-danger"> {/* Botón para PDF, color rojo */}
+          <button onClick={handleDownloadPdf} className="btn btn-danger">
             Descargar PDF
           </button>
         </div>
