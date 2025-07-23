@@ -1,54 +1,464 @@
-/* src/main.css */
-
-/* No hay directivas @tailwind aquí, ya que no estamos usando Tailwind CSS. */
-/* Todos los estilos generales o que no maneje Bootstrap van aquí. */
-
+/* General Body Styles - Egyptian Theme Background */
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0A1128 0%, #172A4D 50%, #0A1128 100%); /* Deep Blue Gradient */
+  color: #FDFEFE; /* Off-white text for contrast */
+  min-height: 100vh; /* Ensure background covers full height */
   margin: 0;
-  padding: 0;
-  background-color: #f0f2f5; /* Tu color de fondo personalizado */
-  color: #333; /* Color de texto base, si no lo manejas con Bootstrap */
+  display: flex;
+  flex-direction: column;
 }
 
-/* Puedes mantener estos si aún los usas y no los reemplazas con clases de Bootstrap */
-.home-container {
+/* Container for overall app */
+.container {
+  max-width: 1500px; /* Increased max-width for more expansion */
+  margin: 10px auto; /* Add vertical margin */
+  padding: 20px 10px; /* Reduced horizontal padding for more table width */
+  background-color: rgba(255, 255, 255, 0.05); /* Slightly transparent white background for content area */
+  border-radius: 1rem; /* More rounded corners */
+  box-shadow: 0 8px 20px rgb(250, 243, 21); /* Stronger, darker shadow */
+  flex-grow: 1; /* Allow container to grow on table pages */
+}
+
+/* Header Styles */
+h2 {
+  color: #DAA520; /* Goldenrod for titles */
+  font-size: 2.2rem; /* Larger, more prominent title */
+  font-weight: 700; /* Bold */
+  margin-bottom: 1.5rem; /* More space below title */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for depth */
+  text-align: center; /* Center align title */
+}
+
+/* Button Group Styling */
+.d-flex.gap-2 {
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 15px; /* More space above buttons */
+  margin-bottom: 20px; /* Space below button group */
+}
+
+.btn {
+  border-radius: 0.75rem; /* Even more rounded corners */
+  font-weight: 600; /* Semi-bold */
+  transition: all 0.3s ease-in-out; /* Smoother transitions */
+  box-shadow: 0 4px 8px rgb(0, 0, 0); /* More prominent shadow */
+  padding: 0.8rem 1.5rem; /* More comfortable padding */
+  font-size: 1rem; /* Standard font size */
+  text-transform: uppercase; /* Uppercase text for buttons */
+  letter-spacing: 0.05em; /* Slight letter spacing */
+  border: none; /* Remove default border */
+}
+
+.btn:hover {
+  transform: translateY(-3px); /* Stronger lift effect */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+}
+
+/* Custom Button Colors - Egyptian Palette */
+.btn-primary { /* Volver al Home */
+  background-color: #0A1128; /* Deep Blue */
+  color: #F4D03F; /* Bright Gold text */
+  border: 2px solid #F4D03F; /* Gold border */
+}
+.btn-primary:hover {
+  background-color: #172A4D; /* Darker blue on hover */
+  color: #00FFFF; /* Neon Cyan text on hover */
+  border-color: #00FFFF;
+}
+
+.btn-success { /* Descargar Excel / Guardar */
+  background-color: #DAA520; /* Goldenrod */
+  color: #0A1128; /* Deep Blue text */
+  border: 2px solid #0A1128; /* Deep Blue border */
+}
+.btn-success:hover {
+  background-color: #F4D03F; /* Brighter gold on hover */
+  color: #2C3E50; /* Darker text on hover */
+  border-color: #2C3E50;
+}
+
+.btn-danger { /* Descargar PDF */
+  background-color: #2C3E50; /* Dark Gray/Black */
+  color: #DAA520; /* Goldenrod text */
+  border: 2px solid #DAA520; /* Goldenrod border */
+}
+.btn-danger:hover {
+  background-color: #172A4D; /* Darker blue on hover */
+  color: #00FFFF; /* Neon Cyan text on hover */
+  border-color: #00FFFF;
+}
+
+.btn-info { /* Editar Ejemplo / Editar Traducción */
+  background-color: #00FFFF; /* Neon Cyan */
+  color: #0A1128; /* Deep Blue text */
+  border: 2px solid #0A1128;
+}
+.btn-info:hover {
+  background-color: #00E0E0; /* Slightly darker cyan */
+  color: #2C3E50;
+  border-color: #2C3E50;
+}
+
+.btn-warning { /* Reiniciar Texto */
+  background-color: #DAA520; /* Goldenrod */
+  color: #0A1128; /* Deep Blue text */
+  border: 2px solid #0A1128;
+}
+.btn-warning:hover {
+  background-color: #F4D03F;
+  color: #2C3E50;
+  border-color: #2C3E50;
+}
+
+.btn-secondary { /* Cancelar */
+  background-color: #6c757d; /* Bootstrap default secondary */
+  border-color: #6c757d;
+  color: #FDFEFE;
+}
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+
+/* Table Styling */
+.table-responsive {
+  margin-top: 30px; /* More space above the table */
+  border-radius: 1rem; /* More rounded corners for the responsive container */
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); /* Stronger, deeper shadow for the table */
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: rgba(255, 255, 255, 0.08); /* Slightly transparent background for table */
+  color: #FDFEFE; /* White text for table content */
+  min-width: 900px; /* Increased min-width for table to ensure horizontal scroll on zoom/small screens */
+}
+
+.table th,
+.table td {
+  padding: 0.8rem 0.5rem; /* Adjusted padding for cells, slightly smaller */
+  vertical-align: middle;
+  border: 1px solid rgba(255, 255, 255, 0.15); /* Lighter, subtle border */
   text-align: center;
-  padding: 2rem;
+  font-size: 0.8rem; /* Slightly smaller font for table content */
 }
 
-.buttons {
+.table thead th {
+  background-color: rgba(255, 255, 255, 0.15); /* Slightly more opaque header */
+  color: #DAA520; /* Goldenrod for header text */
+  font-weight: 700;
+  border-bottom: 2px solid #DAA520; /* Golden border for header bottom */
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.table tbody tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, 0.03); /* Very subtle alternate row background */
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 255, 255, 0.1); /* Subtle neon cyan highlight on hover */
+}
+
+/* Input field in table */
+.table .form-control {
+  font-size: 0.8rem; /* Adjusted font size for input */
+  padding: 0.3rem 0.5rem; /* Adjusted padding for input */
+  border-radius: 0.4rem;
+  border: 1px solid #DAA520; /* Golden border for inputs */
+  background-color: rgba(0, 0, 0, 0.3); /* Darker input background */
+  color: #FDFEFE; /* White text in input */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.table .form-control:focus {
+  border-color: #00FFFF; /* Neon Cyan focus border */
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(0, 255, 255, 0.25); /* Neon Cyan glow on focus */
+  background-color: rgba(0, 0, 0, 0.4); /* Slightly darker on focus */
+}
+
+/* Action Buttons within table cells */
+.table td .btn {
+  padding: 0.25rem 0.4rem; /* Smaller padding for table buttons */
+  font-size: 0.7rem; /* Smaller font for table buttons */
+  min-width: 34px; /* Ensure minimum width for icon buttons */
+  display: inline-flex; /* Use flexbox for icon alignment */
+  align-items: center; /* Center icon vertically */
+  justify-content: center; /* Center icon horizontally */
+  border-radius: 0.5rem; /* Rounded corners for inner buttons */
+  box-shadow: none; /* No shadow for inner buttons */
+  border: 1px solid transparent; /* Default transparent border */
+}
+
+.table td .btn:hover {
+  transform: none; /* No lift for inner buttons */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
+}
+
+.table td .btn i.fas, .table td .btn svg { /* Target Font Awesome icons */
+  margin-right: 0; /* Remove space if only icon */
+  font-size: 0.75rem; /* Adjust icon size */
+}
+
+/* Column Width Adjustments */
+.table th:nth-child(1), /* Tiempo */
+.table td:nth-child(1) {
+  width: 7%; /* Even more narrow */
+  min-width: 65px;
+}
+
+.table th:nth-child(2), /* Conjugación */
+.table td:nth-child(2) {
+  width: 9%; /* Even more narrow */
+  min-width: 85px;
+}
+
+.table th:nth-child(3), /* Tipo de oración */
+.table td:nth-child(3) {
+  width: 11%; /* Even more narrow */
+  min-width: 100px;
+}
+
+.table th:nth-child(4), /* Fórmula */
+.table td:nth-child(4) {
+  width: 17%;
+  min-width: 140px;
+}
+
+.table th:nth-child(5), /* Ejemplo */
+.table td:nth-child(5) {
+  width: 24%; /* Wider */
+  min-width: 250px; /* Increased min-width for better content display */
+}
+
+.table th:nth-child(6), /* Acciones Ejemplo */
+.table td:nth-child(6) {
+  width: 7%; /* More narrow */
+  min-width: 60px; /* Reduced min-width */
+}
+
+.table th:nth-child(7), /* Traducción */
+.table td:nth-child(7) {
+  width: 24%; /* Wider */
+  min-width: 250px; /* Increased min-width for better content display */
+}
+
+.table th:nth-child(8), /* Acciones Traducción */
+.table td:nth-child(8) {
+  width: 7%; /* More narrow */
+  min-width: 60px; /* Reduced min-width */
+}
+
+/* Responsive adjustments for very small screens */
+@media (max-width: 768px) { /* Adjust breakpoint for tablets */
+  .container {
+    padding: 15px;
+  }
+  h2 {
+    font-size: 1.8rem;
+  }
+  .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+  .table th,
+  .table td {
+    padding: 0.8rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  .table td .btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+    min-width: 35px;
+  }
+  .table td .btn i.fas, .table td .btn svg {
+    font-size: 0.4rem;
+  }
+}
+
+@media (max-width: 576px) { /* Mobile specific adjustments */
+  h2 {
+    font-size: 1.5rem;
+  }
+  .d-flex.gap-2 {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .btn {
+    width: 100%;
+  }
+  .table-responsive {
+    border-radius: 0.5rem;
+  }
+  .table th,
+  .table td {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.75rem;
+  }
+  .table td .btn {
+    flex-direction: column; /* Stack buttons vertically in action cells */
+    width: auto; /* Auto width */
+    margin: 0 2px 5px 2px !important; /* Small margin around buttons */
+    padding: 0.2rem 0.4rem;
+  }
+  .table td .btn i.fas, .table td .btn svg {
+    margin-right: 0;
+    font-size: 0.7rem;
+  }
+  /* Ensure min-widths are respected for horizontal scroll */
+  .table {
+    min-width: 750px; /* Adjust if content overflows too much */
+  }
+}
+
+/* Home Page Specific Styles */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center;
+  flex-grow: 1; /* Allow it to take available space */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.05); /* Same as main container */
+  border-radius: 1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  max-width: 900px; /* Increased max-width for home content */
+  margin: 20px auto; /* Center with margin */
+}
+
+.home-container h1 {
+  color: #F4D03F; /* Bright Gold for main title */
+  font-size: 3.2rem; /* Larger font size */
+  font-weight: 800;
+  margin-bottom: 1.5rem; /* More space below */
+  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7); /* Stronger shadow */
+  line-height: 1.2;
+}
+
+.home-container p {
+  color: #FFFFFF; /* Pure white for paragraph text */
+  font-size: 1.2rem; /* Slightly larger */
+  line-height: 1.8; /* More comfortable line spacing */
+  margin-bottom: 2.5rem; /* More space below */
+  max-width: 700px; /* Increased max-width for paragraph */
+}
+
+.home-container strong {
+  color: #00FFFF; /* Neon Cyan for strong text */
+  font-weight: 700;
+}
+
+.home-container h2 {
+  color: #DAA520; /* Goldenrod for section title */
+  font-size: 2rem; /* Larger */
+  margin-top: 2.5rem; /* More space above */
+  margin-bottom: 1.8rem; /* More space below */
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+}
+
+.home-container .buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* More space between buttons */
+  justify-content: center;
   margin-top: 1.5rem;
 }
 
-/* Si quieres que Bootstrap maneje el estilo de tus botones,
-   NO INCLUYAS las siguientes reglas 'button' y 'button:hover'.
-   Si las incluyes, sobrescribirán el estilo por defecto de Bootstrap
-   a menos que uses clases de Bootstrap específicas en tus botones HTML. */
-/*
-button {
-  padding: 0.8rem 1.5rem;
-  margin: 0.5rem;
-  font-size: 1rem;
+.home-container .buttons a {
+  text-decoration: none;
+}
+
+.home-container .buttons button {
+  /* Reusing .btn styles, but customizing for home page */
+  background-color: #0A1128; /* Deep Blue */
+  color: #F4D03F; /* Bright Gold text */
+  border: 2px solid #F4D03F; /* Gold border */
+  padding: 1.2rem 2.5rem; /* Larger padding */
+  font-size: 1.2rem; /* Larger font */
+  border-radius: 0.75rem;
+  font-weight: 700;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow */
   cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  background-color: #007bff;
-  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.1em; /* More letter spacing */
 }
 
-button:hover {
-  background-color: #0056b3;
-}
-*/
-/* Estilo para el texto sugerido que será copiable */
-.suggestion-text-copyable {
-  cursor: copy; /* Indica que el texto es copiable */
-  text-decoration: underline dotted; /* Para que visualmente se vea que es interactivo */
-  transition: background-color 0.2s ease-in-out; /* Transición suave para el hover */
+.home-container .buttons button:hover {
+  background-color: #172A4D; /* Darker blue on hover */
+  color: #00FFFF; /* Neon Cyan text on hover */
+  border-color: #00FFFF;
+  transform: translateY(-5px); /* Stronger lift */
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
 }
 
-.suggestion-text-copyable:hover {
-  background-color: #e2e6ea; /* Un color de fondo claro al pasar el ratón */
-  border-radius: 3px; /* Bordes ligeramente redondeados al resaltar */
+/* Responsive adjustments for Home Page */
+@media (max-width: 992px) { /* Adjust breakpoint for larger tablets */
+  .home-container h1 {
+    font-size: 2.8rem;
+  }
+  .home-container p {
+    font-size: 1.1rem;
+  }
+  .home-container h2 {
+    font-size: 1.8rem;
+  }
+  .home-container .buttons button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: 15px;
+    margin: 15px auto;
+  }
+  .home-container h1 {
+    font-size: 2.2rem;
+  }
+  .home-container p {
+    font-size: 1rem;
+  }
+  .home-container h2 {
+    font-size: 1.6rem;
+  }
+  .home-container .buttons button {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .home-container {
+    padding: 10px;
+    margin: 10px auto;
+  }
+  .home-container h1 {
+    font-size: 1.8rem;
+  }
+  .home-container p {
+    font-size: 0.9rem;
+  }
+  .home-container h2 {
+    font-size: 1.4rem;
+  }
+  .home-container .buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .home-container .buttons button {
+    width: 100%;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
 }
