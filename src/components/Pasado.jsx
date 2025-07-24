@@ -5,7 +5,7 @@ import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-// Font Awesome Imports
+// Font Awesome Imports from NPM packages
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faCheck, faRedo, faTimes } from '@fortawesome/free-solid-svg-icons';
 
@@ -39,7 +39,7 @@ const Pasado = () => {
           return obj;
         });
 
-        const filtrado = rows.filter((r) => r['tiempo']?.toLowerCase()?.trim() === 'pasado');
+        const filtrado = rows.filter((r) => r['tiempo']?.toLowerCase()?.trim() === 'pasado'); // Filter for 'pasado'
         setData(filtrado);
         setOriginalData(JSON.parse(JSON.stringify(filtrado))); // Deep copy for reset functionality
       });
@@ -59,8 +59,8 @@ const Pasado = () => {
     const ws = XLSX.utils.json_to_sheet(dataToExport);
     const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    saveAs(blob, `tiempo_pasado_${new Date().toLocaleDateString()}.xlsx`);
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' }); 
+    saveAs(blob, `tiempo_pasado_${new Date().toLocaleDateString()}.xlsx`); // File name for 'pasado'
   };
 
   // Function to download as PDF
@@ -79,7 +79,7 @@ const Pasado = () => {
     ]);
 
     doc.setFontSize(18);
-    doc.text("Tabla del Tiempo Pasado", 14, 20);
+    doc.text("Tabla del Tiempo Pasado", 14, 20); // Title for 'pasado'
 
     doc.autoTable({
       head: [tableColumn],
@@ -103,7 +103,7 @@ const Pasado = () => {
       }
     });
 
-    doc.save(`tiempo_pasado_${new Date().toLocaleDateString()}.pdf`);
+    doc.save(`tiempo_pasado_${new Date().toLocaleDateString()}.pdf`); // File name for 'pasado'
   };
 
   // --- Functions for EXAMPLE editing ---
@@ -207,7 +207,7 @@ const Pasado = () => {
   };
 
   return (
-    <div className="container mt-2">
+    <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="text-xl font-weight-bold">Tabla del Tiempo Pasado</h2>
         <div className="d-flex gap-2">
@@ -227,20 +227,20 @@ const Pasado = () => {
         <table className="table table-bordered table-hover">
           <thead>
             <tr className="bg-light">
-              <th scope="col">Tiempo</th>
+              <th scope="col">Tiempo</th>{/* Eliminar espacios y saltos de línea entre <th> */}
               <th scope="col">Conjugación</th>
               <th scope="col">Tipo de oración</th>
               <th scope="col">Fórmula</th>
               <th scope="col">Ejemplo</th>
-              <th scope="col">Acciones Ejemplo</th> {/* New column for Example actions */}
+              <th scope="col">Acciones Ejemplo</th>
               <th scope="col">Traducción</th>
-              <th scope="col">Acciones Traducción</th> {/* New column for Translation actions */}
+              <th scope="col">Acciones Traducción</th>
             </tr>
           </thead>
           <tbody>
             {data.map((fila) => (
               <tr key={fila.id}>
-                <td>{fila['tiempo']}</td>
+                <td>{fila['tiempo']}</td>{/* Eliminar espacios y saltos de línea entre <td> */}
                 <td>{fila['conjugacion']}</td>
                 <td>{fila['tipo de oracion']}</td>
                 <td>{fila['formula']}</td>
@@ -268,13 +268,13 @@ const Pasado = () => {
                         className="btn btn-sm btn-success me-2"
                         onClick={() => handleSaveExampleEdit(fila.id)}
                       >
-                        <FontAwesomeIcon icon={faCheck} /> {/* Check icon */}
+                        <FontAwesomeIcon icon={faCheck} />
                       </button>
                       <button
                         className="btn btn-sm btn-secondary"
                         onClick={handleCancelExampleEdit}
                       >
-                        <FontAwesomeIcon icon={faTimes} /> {/* Times icon */}
+                        <FontAwesomeIcon icon={faTimes} />
                       </button>
                     </>
                   ) : (
@@ -283,13 +283,13 @@ const Pasado = () => {
                         className="btn btn-sm btn-info me-2"
                         onClick={() => handleEditExampleClick(fila.id, fila['ejemplo'])}
                       >
-                        <FontAwesomeIcon icon={faPencilAlt} /> {/* Pencil icon */}
+                        <FontAwesomeIcon icon={faPencilAlt} />
                       </button>
                       <button
                         className="btn btn-sm btn-warning"
                         onClick={() => handleResetExampleText(fila.id)}
                       >
-                        <FontAwesomeIcon icon={faRedo} /> {/* Redo icon */}
+                        <FontAwesomeIcon icon={faRedo} />
                       </button>
                     </>
                   )}
