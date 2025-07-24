@@ -1,7 +1,7 @@
 /* General Body Styles - Egyptian Theme Background */
 body {
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #0A1128 0%, #172A4D 50%, #0A1128 100%); /* Deep Blue Gradient */
+  background: linear-gradient(135deg, #55e2f5 0%, #172A4D 50%, #0A1128 100%); /* Deep Blue Gradient */
   color: #FDFEFE; /* Off-white text for contrast */
   min-height: 100vh; /* Ensure background covers full height */
   margin: 0;
@@ -22,11 +22,11 @@ body {
 
 /* Header Styles */
 h2 {
-  color: #DAA520; /* Goldenrod for titles */
+  color: #eeff00; /* Goldenrod for titles */
   font-size: 2.2rem; /* Larger, more prominent title */
   font-weight: 700; /* Bold */
   margin-bottom: 1.5rem; /* More space below title */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for depth */
+  text-shadow: 2px 2px 4px rgb(255, 234, 0); /* Text shadow for depth */
   text-align: center; /* Center align title */
 }
 
