@@ -1,7 +1,7 @@
 /* General Body Styles - Egyptian Theme Background */
 body {
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #55e2f5 0%, #172A4D 50%, #0A1128 100%); /* Deep Blue Gradient */
+  background: linear-gradient(135deg, #5634ff 0%, #172A4D 50%, #0A1128 100%); /* Deep Blue Gradient */
   color: #FDFEFE; /* Off-white text for contrast */
   min-height: 100vh; /* Ensure background covers full height */
   margin: 0;
@@ -13,24 +13,24 @@ body {
 .container {
   width: 90%; /* Occupy 90% of screen width */
   margin: 20px auto; /* Center with 5% margin on each side */
-  padding: 20px 0; /* Remove horizontal padding to maximize table width */
+  padding: 20px 5px; /* Reduced horizontal padding for more table width */
   background-color: rgba(255, 255, 255, 0.05); /* Slightly transparent white background for content area */
   border-radius: 1rem; /* More rounded corners */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Stronger, darker shadow */
+  box-shadow: 0 8px 20px rgb(229, 255, 0); /* Stronger, darker shadow */
   flex-grow: 1; /* Allow container to grow on table pages */
 }
 
 /* Header Styles */
 h2 {
-  color: #eeff00; /* Goldenrod for titles */
+  color: #ffed2d; /* Goldenrod for titles */
   font-size: 2.2rem; /* Larger, more prominent title */
   font-weight: 700; /* Bold */
   margin-bottom: 1.5rem; /* More space below title */
-  text-shadow: 2px 2px 4px rgb(255, 234, 0); /* Text shadow for depth */
+  text-shadow: 2px 2px 4px rgb(255, 240, 80); /* Text shadow for depth */
   text-align: center; /* Center align title */
 }
 
-/* Button Group Styling */
+/* Button Group Styling (for main buttons like "Volver al Home", "Descargar Excel/PDF") */
 .d-flex.gap-2 {
   flex-wrap: wrap;
   justify-content: center;
@@ -42,7 +42,7 @@ h2 {
   border-radius: 0.75rem; /* Even more rounded corners */
   font-weight: 600; /* Semi-bold */
   transition: all 0.3s ease-in-out; /* Smoother transitions */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More prominent shadow */
+  box-shadow: 0 4px 8px rgb(255, 98, 98); /* More prominent shadow */
   padding: 0.8rem 1.5rem; /* More comfortable padding */
   font-size: 1rem; /* Standard font size */
   text-transform: uppercase; /* Uppercase text for buttons */
@@ -56,7 +56,7 @@ h2 {
 }
 
 /* Custom Button Colors - Egyptian Palette */
-.btn-primary { /* Volver al Home */
+.btn-primary { /* Volver al Home, Modal Close */
   background-color: #0A1128; /* Deep Blue */
   color: #F4D03F; /* Bright Gold text */
   border: 2px solid #F4D03F; /* Gold border */
@@ -89,7 +89,7 @@ h2 {
   border-color: #00FFFF;
 }
 
-.btn-info { /* Editar Ejemplo / Editar Traducción */
+.btn-info { /* Editar Ejemplo / Editar Traducción / Comprobar (Modal) */
   background-color: #00FFFF; /* Neon Cyan */
   color: #0A1128; /* Deep Blue text */
   border: 2px solid #0A1128;
@@ -126,7 +126,7 @@ h2 {
 .table-responsive {
   margin-top: 30px; /* More space above the table */
   border-radius: 1rem; /* More rounded corners for the responsive container */
-  overflow: hidden;
+  overflow-x: auto; /* Ensures horizontal scroll if content overflows */
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); /* Stronger, deeper shadow for the table */
 }
 
@@ -137,7 +137,7 @@ h2 {
   border-spacing: 0;
   background-color: rgba(255, 255, 255, 0.08); /* Slightly transparent background for table */
   color: #FDFEFE; /* White text for table content */
-  /* min-width removed to allow more aggressive shrinking */
+  /* min-width removed to allow more aggressive shrinking, overflow-x handles it */
 }
 
 .table th,
@@ -147,6 +147,7 @@ h2 {
   border: 1px solid rgba(255, 255, 255, 0.15); /* Lighter, subtle border */
   text-align: center;
   font-size: 0.7rem; /* Smaller font for table content to fit more */
+  white-space: nowrap; /* Prevent text wrapping in cells by default */
 }
 
 .table thead th {
@@ -175,6 +176,7 @@ h2 {
   background-color: rgba(0, 0, 0, 0.3); /* Darker input background */
   color: #FDFEFE; /* White text in input */
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  width: 100%; /* Ensure input takes full width of its cell */
 }
 
 .table .form-control:focus {
@@ -204,7 +206,7 @@ h2 {
 
 .table td .btn i.fas, .table td .btn svg { /* Target Font Awesome icons */
   margin-right: 0; /* Remove space if only icon */
-  font-size: 0.7rem; /* Adjust icon size */
+  font-size: 0.75rem; /* Adjust icon size */
 }
 
 /* Column Width Adjustments (percentages for flexibility) */
@@ -230,7 +232,7 @@ h2 {
 
 .table th:nth-child(5), /* Ejemplo */
 .table td:nth-child(5) {
-  width: 27%; /* Wider */
+  width: 20%; /* Adjusted for new column */
 }
 
 .table th:nth-child(6), /* Acciones Ejemplo */
@@ -240,7 +242,7 @@ h2 {
 
 .table th:nth-child(7), /* Traducción */
 .table td:nth-child(7) {
-  width: 27%; /* Wider */
+  width: 20%; /* Adjusted for new column */
 }
 
 .table th:nth-child(8), /* Acciones Traducción */
@@ -248,10 +250,16 @@ h2 {
   width: 3%; /* Very narrow for just icon */
 }
 
-/* Responsive adjustments for very small screens */
-@media (max-width: 768px) { /* Adjust breakpoint for tablets */
+.table th:nth-child(9), /* Asistente UIA */
+.table td:nth-child(9) {
+  width: 8%; /* New column width */
+}
+
+/* Responsive adjustments for all pages */
+@media (max-width: 768px) { /* Tablets and smaller */
   .container {
-    padding: 15px 5px; /* Adjust padding for smaller screens */
+    width: 95%; /* Occupy more width on tablets */
+    padding: 15px 5px;
   }
   h2 {
     font-size: 1.8rem;
@@ -260,10 +268,15 @@ h2 {
     padding: 0.6rem 1rem;
     font-size: 0.9rem;
   }
+  /* Table specific adjustments for tablets */
   .table th,
   .table td {
     padding: 0.6rem 0.3rem;
     font-size: 0.7rem;
+  }
+  .table .form-control {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.3rem;
   }
   .table td .btn {
     padding: 0.2rem 0.3rem;
@@ -277,41 +290,177 @@ h2 {
 
 @media (max-width: 576px) { /* Mobile specific adjustments */
   .container {
-    padding: 10px 5px; /* Even less padding on mobile */
+    width: 98%; /* Occupy almost full width on mobile */
+    padding: 10px 2px; /* Minimal horizontal padding */
   }
   h2 {
     font-size: 1.5rem;
   }
+  /* Main button group stacking for mobile */
   .d-flex.gap-2 {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: stretch; /* Stretch buttons to full width */
+    gap: 10px; /* Space between stacked buttons */
   }
   .btn {
-    width: 100%;
+    width: 100%; /* Make main buttons full width */
   }
   .table-responsive {
     border-radius: 0.5rem;
   }
+  /* Table cell adjustments for mobile */
   .table th,
   .table td {
-    padding: 0.5rem 0.2rem;
-    font-size: 0.7rem;
+    padding: 0.5rem 0.2rem; /* Even less padding */
+    font-size: 0.65rem; /* Even smaller font */
   }
+  .table .form-control {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.2rem;
+  }
+  /* Action buttons stacking for mobile table cells */
   .table td .btn {
-    flex-direction: column; /* Stack buttons vertically in action cells */
+    flex-direction: column; /* Stack action buttons vertically */
     width: auto; /* Auto width */
-    margin: 0 1px 3px 1px !important; /* Smaller margin around buttons */
+    margin: 0 1px 3px 1px !important; /* Small margin around buttons */
     padding: 0.15rem 0.25rem;
   }
   .table td .btn i.fas, .table td .btn svg {
     margin-right: 0;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
   }
-  /* On very small screens, horizontal scroll might still be unavoidable for a full table */
-  /* The goal is to make it as compact as possible before scroll is needed */
+  /* Important: For very small screens, horizontal scroll is expected for wide tables.
+     The goal is to make it as compact and readable as possible before scroll is needed. */
 }
 
+/* AI Assistant Modal Styles */
+.assistant-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050; /* Above other content, similar to Bootstrap modal backdrop */
+}
+
+.assistant-modal-content {
+  background-color: #172A4D; /* Dark blue, matching background */
+  color: #FDFEFE; /* White text */
+  padding: 30px;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  max-width: 500px; /* Max width for the modal */
+  width: 90%; /* Responsive width */
+  text-align: center;
+  position: relative;
+  border: 2px solid #DAA520; /* Goldenrod border */
+}
+
+.assistant-modal-content h3 {
+  color: #F4D03F; /* Bright Gold for modal title */
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.assistant-modal-content h3 svg { /* Icon next to title */
+  margin-right: 10px;
+}
+
+.assistant-initial-message {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.assistant-feedback {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.assistant-feedback.correct {
+  color: #28a745; /* Green for correct feedback */
+}
+
+.assistant-feedback.incorrect {
+  color: #dc3545; /* Red for incorrect feedback */
+}
+
+.assistant-loading {
+  font-size: 1.1rem;
+  color: #00FFFF; /* Neon Cyan for loading text */
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.assistant-loading .fa-spinner {
+  margin-left: 10px;
+}
+
+.assistant-suggestion {
+  font-size: 0.95rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  color: #FDFEFE;
+}
+
+.suggestion-text {
+  color: #00FFFF; /* Neon Cyan for clickable suggestion */
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.suggestion-text:hover {
+  color: #F4D03F; /* Gold on hover */
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.modal-actions .btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  text-transform: none; /* Don't uppercase modal button text */
+  letter-spacing: normal;
+}
+
+/* Responsive adjustments for Modal */
+@media (max-width: 576px) {
+  .assistant-modal-content {
+    padding: 20px;
+    max-width: 95%; /* Even wider on small mobiles */
+  }
+  .assistant-modal-content h3 {
+    font-size: 1.5rem;
+  }
+  .assistant-initial-message,
+  .assistant-feedback,
+  .assistant-loading,
+  .assistant-suggestion {
+    font-size: 0.9rem;
+  }
+  .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .modal-actions .btn {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}
 
 /* Home Page Specific Styles */
 .home-container {
@@ -334,7 +483,7 @@ h2 {
   font-size: 3.2rem; /* Larger font size */
   font-weight: 800;
   margin-bottom: 1.5rem; /* More space below */
-  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7); /* Stronger shadow */
+  text-shadow: 4px 4px 8px rgb(255, 234, 7); /* Stronger shadow */
   line-height: 1.2;
 }
 
@@ -356,7 +505,7 @@ h2 {
   font-size: 2rem; /* Larger */
   margin-top: 2.5rem; /* More space above */
   margin-bottom: 1.8rem; /* More space below */
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+  text-shadow: 3px 3px 6px rgb(255, 239, 13);
 }
 
 .home-container .buttons {
@@ -373,7 +522,7 @@ h2 {
 
 .home-container .buttons button {
   /* Reusing .btn styles, but customizing for home page */
-  background-color: #0A1128; /* Deep Blue */
+  background-color: #3463ff; /* Deep Blue */
   color: #F4D03F; /* Bright Gold text */
   border: 2px solid #F4D03F; /* Gold border */
   padding: 1.2rem 2.5rem; /* Larger padding */
@@ -381,18 +530,18 @@ h2 {
   border-radius: 0.75rem;
   font-weight: 700;
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+  box-shadow: 0 4px 10px rgb(241, 255, 40); /* Stronger shadow */
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 0.1em; /* More letter spacing */
 }
 
 .home-container .buttons button:hover {
-  background-color: #172A4D; /* Darker blue on hover */
+  background-color: #4989ff; /* Darker blue on hover */
   color: #00FFFF; /* Neon Cyan text on hover */
   border-color: #00FFFF;
   transform: translateY(-5px); /* Stronger lift */
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 18px rgb(255, 237, 45);
 }
 
 /* Responsive adjustments for Home Page */
