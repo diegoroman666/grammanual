@@ -1,28 +1,13 @@
 // src/services/translateApi.js
-export async function translateText(text, targetLang = "es") {
-  if (!text || text.trim() === "") return "";
-
-  // Aquí podrías llamar a tu API real (Gemini, Google Translate, DeepL, etc.)
-  // Ejemplo básico simulado:
+export const translateText = async (text) => {
   try {
-    const response = await fetch("https://api-free-translate.vercel.app/api/translate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        q: text,
-        target: targetLang
-      }),
-    });
-
-    if (!response.ok) {
-      console.warn("Fallo traducción, devolviendo texto original.");
-      return text;
-    }
-
-    const result = await response.json();
-    return result?.translatedText || text;
-  } catch (err) {
-    console.error("Error en translateText:", err);
+    const response = await fetch(
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|es`
+    );
+    const data = await response.json();
+    return data.responseData.translatedText;
+  } catch (error) {
+    console.error("Error al traducir:", error);
     return text;
   }
-}
+};

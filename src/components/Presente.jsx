@@ -7,8 +7,8 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faCheck, faRedo, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { generateGrammarFeedback } from '../services/geminiApi';
 import '../styles/pro-theme.css';
+import { translateText } from '../services/translateApi';
 
 const groupByConjugation = (rows) => {
   const groups = {};
@@ -27,7 +27,6 @@ const Presente = () => {
   const [editedExample, setEditedExample] = useState('');
   const [editingTranslationRowId, setEditingTranslationRowId] = useState(null);
   const [editedTranslation, setEditedTranslation] = useState('');
-  const [feedbackData, setFeedbackData] = useState({});
 
   useEffect(() => {
     fetch('/estructura.xlsx')
@@ -99,29 +98,13 @@ const Presente = () => {
     }
   };
 
-  const handleSaveExampleEdit = async (id) => {
-    const row = data.find((row) => row.id === id);
+  const handleSaveExampleEdit = (id) => {
     const updatedData = data.map((rowItem) =>
       rowItem.id === id ? { ...rowItem, ejemplo: editedExample } : rowItem
     );
     setData(updatedData);
     setEditingExampleRowId(null);
     setEditedExample('');
-
-    const feedback = await generateGrammarFeedback(
-      editedExample,
-      row['formula'],
-      row['tipo de oracion'],
-      "PRESENTE"
-    );
-    setFeedbackData((prev) => ({ ...prev, [id]: feedback }));
-
-    if (!feedback.correct) {
-      setTimeout(() => {
-        const input = document.querySelector(`#input-example-${id}`);
-        if (input) input.focus();
-      }, 100);
-    }
   };
 
   const handleCancelExampleEdit = () => {
@@ -143,8 +126,19 @@ const Presente = () => {
     }
   };
 
-  const handleExampleChange = (e) => setEditedExample(e.target.value);
-  const handleExampleKeyPress = (e, id) => { if (e.key === 'Enter') handleSaveExampleEdit(id); };
+  const handleExampleChange = async (e) => {
+    const value = e.target.value;
+    setEditedExample(value);
+
+    const translation = await translateText(value);
+    setData((prevData) =>
+      prevData.map((row) =>
+        row.id === editingExampleRowId
+          ? { ...row, traduccion: translation }
+          : row
+      )
+    );
+  };
 
   const handleEditTranslationClick = (id, currentTranslation) => {
     setEditingTranslationRowId(id);
@@ -185,7 +179,6 @@ const Presente = () => {
   };
 
   const handleTranslationChange = (e) => setEditedTranslation(e.target.value);
-  const handleTranslationKeyPress = (e, id) => { if (e.key === 'Enter') handleSaveTranslationEdit(id); };
 
   const grouped = groupByConjugation(data);
 
@@ -215,7 +208,6 @@ const Presente = () => {
                   <th>Acciones Ejemplo</th>
                   <th>Traducción</th>
                   <th>Acciones Traducción</th>
-                  <th>Feedback</th>
                 </tr>
               </thead>
               <tbody>
@@ -226,12 +218,11 @@ const Presente = () => {
                     <td>
                       {editingExampleRowId === fila.id ? (
                         <input
-                          id={`input-example-${fila.id}`}
                           type="text"
                           className="form-control"
                           value={editedExample}
                           onChange={handleExampleChange}
-                          onKeyPress={(e) => handleExampleKeyPress(e, fila.id)}
+                          onKeyDown={(e) => { if (e.key === 'Enter') handleSaveExampleEdit(fila.id); }}
                           autoFocus={editingExampleRowId === fila.id}
                         />
                       ) : (
@@ -266,7 +257,7 @@ const Presente = () => {
                           className="form-control"
                           value={editedTranslation}
                           onChange={handleTranslationChange}
-                          onKeyPress={(e) => handleTranslationKeyPress(e, fila.id)}
+                          onKeyDown={(e) => { if (e.key === 'Enter') handleSaveTranslationEdit(fila.id); }}
                           autoFocus={editingTranslationRowId === fila.id}
                         />
                       ) : (
@@ -292,35 +283,6 @@ const Presente = () => {
                             <FontAwesomeIcon icon={faRedo} />
                           </button>
                         </>
-                      )}
-                    </td>
-                    <td>
-                      {feedbackData[fila.id] ? (
-                        <>
-                          <div>
-                            <strong>{feedbackData[fila.id].correct ? "Correcto" : "Incorrecto"}</strong>
-                          </div>
-                          <div>{feedbackData[fila.id].feedback}</div>
-                          {!feedbackData[fila.id].correct && feedbackData[fila.id].suggestion && (
-                            <div>
-                              <em
-                                style={{ cursor: "pointer", color: "#61dafb", textDecoration: "underline" }}
-                                onClick={() => {
-                                  setEditingExampleRowId(fila.id);
-                                  setEditedExample(feedbackData[fila.id].suggestion);
-                                  setTimeout(() => {
-                                    const input = document.querySelector(`#input-example-${fila.id}`);
-                                    if (input) input.focus();
-                                  }, 50);
-                                }}
-                              >
-                                Sugerencia: {feedbackData[fila.id].suggestion}
-                              </em>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <span className="text-muted">Sin evaluar</span>
                       )}
                     </td>
                   </tr>
