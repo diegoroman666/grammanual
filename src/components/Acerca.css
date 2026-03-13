@@ -1,0 +1,141 @@
+/* Acerca Page Styles */
+.acerca-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.acerca-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: var(--bg-card);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.acerca-header h1 {
+  color: var(--accent-gold);
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.acerca-header .version {
+  color: var(--accent-cyan);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.acerca-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.acerca-section h2 {
+  color: var(--accent-gold);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.acerca-section p {
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+
+.acerca-section strong {
+  color: var(--accent-cyan);
+}
+
+.acerca-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.feature-card {
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.feature-icon {
+  font-size: 2rem;
+  color: var(--accent-cyan);
+  margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+  color: var(--accent-gold);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+}
+
+.features-list li {
+  padding: 0.75rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.features-list li:last-child {
+  border-bottom: none;
+}
+
+.copyright {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.acerca-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.acerca-actions .btn {
+  padding: 0.75rem 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .acerca-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .acerca-section h2 {
+    font-size: 1.25rem;
+  }
+  
+  .acerca-features {
+    grid-template-columns: 1fr;
+  }
+  
+  .acerca-actions {
+    flex-direction: column;
+  }
+  
+  .acerca-actions .btn {
+    width: 100%;
+  }
+}
+

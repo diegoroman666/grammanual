@@ -1,0 +1,465 @@
+/* Ejercicios Page Styles */
+.ejercicios-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.ejercicios-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.ejercicios-header h1 {
+  color: var(--accent-gold);
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.ejercicios-header p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Filter Buttons */
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.filter-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+  border-color: var(--accent-cyan);
+}
+
+.filter-btn.active {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  border-color: var(--accent-gold);
+}
+
+/* Exercise Info */
+.exercise-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-card);
+  border-radius: 0.5rem;
+}
+
+.exercise-type {
+  color: var(--accent-cyan);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.exercise-progress {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Exercise Card */
+.exercise-card {
+  background: var(--bg-card);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.exercise-question h3 {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* Sentence Blank */
+.sentence-blank {
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid var(--accent-cyan);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.formula-text {
+  color: var(--accent-cyan);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.time-info {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.sentence-text {
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+/* Reading Text */
+.reading-text {
+  margin-bottom: 1rem;
+}
+
+.text-box {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.text-box h4 {
+  color: var(--accent-gold);
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.text-box p {
+  color: var(--text-primary);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+/* Text Actions */
+.text-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.audio-btn,
+.translate-btn {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.audio-btn:hover:not(:disabled),
+.translate-btn:hover {
+  background: var(--accent-gold);
+}
+
+.audio-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.translation {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Audio Section */
+.audio-section {
+  text-align: center;
+  padding: 1rem;
+}
+
+.play-btn {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.play-btn:hover:not(:disabled) {
+  background: var(--accent-gold);
+  transform: scale(1.05);
+}
+
+.play-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.audio-hint {
+  color: var(--text-secondary);
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Sentence Highlight */
+.sentence-highlight {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(0, 255, 255, 0.15) 100%);
+  border: 2px solid var(--accent-gold);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.sentence-highlight p {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Answer Options */
+.exercise-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.option-btn {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100%;
+  color: var(--text-primary);
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: var(--accent-cyan);
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.option-btn.selected {
+  border-color: var(--accent-cyan);
+  background: rgba(0, 255, 255, 0.15);
+}
+
+.option-btn.correct {
+  border-color: #28a745;
+  background: rgba(40, 167, 69, 0.2);
+}
+
+.option-btn.incorrect {
+  border-color: #dc3545;
+  background: rgba(220, 53, 69, 0.2);
+}
+
+.option-btn:disabled {
+  cursor: default;
+}
+
+.option-letter {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.option-text {
+  color: var(--text-primary);
+  font-size: 1rem;
+  flex: 1;
+}
+
+.icon-correct {
+  color: #28a745;
+  font-size: 1.25rem;
+}
+
+.icon-incorrect {
+  color: #dc3545;
+  font-size: 1.25rem;
+}
+
+/* Result */
+.exercise-result {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+
+.exercise-result.correct {
+  background: rgba(40, 167, 69, 0.15);
+  border: 1px solid #28a745;
+}
+
+.exercise-result.incorrect {
+  background: rgba(220, 53, 69, 0.15);
+  border: 1px solid #dc3545;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.exercise-result.correct .result-header {
+  color: #28a745;
+}
+
+.exercise-result.incorrect .result-header {
+  color: #dc3545;
+}
+
+.correct-answer {
+  margin: 0.75rem 0;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+}
+
+.correct-answer p {
+  color: var(--text-secondary);
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.correct-answer strong {
+  color: var(--accent-cyan);
+}
+
+.explanation {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  border-left: 3px solid var(--accent-cyan);
+}
+
+.explanation p {
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.explanation strong {
+  color: var(--accent-gold);
+}
+
+/* Action Buttons */
+.exercise-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.exercise-actions .btn {
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .ejercicios-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .filter-buttons {
+    flex-direction: column;
+  }
+
+  .filter-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .exercise-info {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .exercise-card {
+    padding: 1rem;
+  }
+
+  .option-btn {
+    padding: 0.75rem;
+  }
+
+  .option-letter {
+    width: 28px;
+    height: 28px;
+    font-size: 0.875rem;
+  }
+
+  .exercise-actions {
+    flex-direction: column;
+  }
+
+  .exercise-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
