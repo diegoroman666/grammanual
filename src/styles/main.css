@@ -1,607 +1,478 @@
-/* General Body Styles - Egyptian Theme Background */
-body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #5634ff 0%, #172A4D 50%, #0A1128 100%); /* Deep Blue Gradient */
-  color: #FDFEFE; /* Off-white text for contrast */
-  min-height: 100vh; /* Ensure background covers full height */
+/* ═══════════════════════════════════════════════════════
+   HOME PAGE
+   ═══════════════════════════════════════════════════════ */
+.home-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Hero */
+.home-hero {
+  text-align: center;
+  padding: 3rem 1rem 2.5rem;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  border: 1px solid var(--accent-cyan);
+  padding: 0.25rem 0.85rem;
+  border-radius: 9999px;
+  margin-bottom: 1.25rem;
+  opacity: 0.85;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin: 0 0 1.25rem;
+  letter-spacing: -0.03em;
+  transition: color 0.4s ease;
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  max-width: 580px;
+  margin: 0 auto;
+  transition: color 0.4s ease;
+}
+
+.hero-strong {
+  color: var(--accent-cyan);
+  font-weight: 600;
+  -webkit-text-fill-color: var(--accent-cyan);
+}
+
+/* Section headings */
+.home-section {
+  margin-bottom: 3rem;
+}
+
+.section-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin: 0;
+  letter-spacing: -0.02em;
+  transition: color 0.4s ease;
+}
+
+/* ── Time Travel Cards ── */
+.time-card {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.4s ease;
 }
 
-/* Container for overall app */
+.time-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  transition: opacity 0.3s ease;
+}
+
+.card-accent-red::after   { background: linear-gradient(90deg, #F87171, #FB923C); }
+.card-accent-green::after { background: linear-gradient(90deg, #34D399, #10B981); }
+.card-accent-blue::after  { background: linear-gradient(90deg, #60A5FA, #818CF8); }
+
+.time-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px var(--shadow-color);
+  border-color: var(--accent-cyan);
+  background: var(--card-hover);
+}
+
+.time-card-emoji {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.time-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.time-card:hover .time-card-title { color: var(--accent-cyan); }
+
+.time-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0 0 1rem;
+  line-height: 1.5;
+  transition: color 0.4s ease;
+}
+
+.time-card-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-cyan);
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.time-card:hover .time-card-arrow {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+  border-color: var(--accent-cyan);
+  transform: translateX(4px);
+}
+
+/* ── Feature Cards ── */
+.feature-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.4s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px var(--shadow-color);
+  border-color: var(--accent-cyan);
+  background: var(--card-hover);
+}
+
+.feature-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.875rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.feature-card:hover .feature-icon-wrap {
+  background: rgba(34, 211, 238, 0.12);
+  border-color: var(--accent-cyan);
+}
+
+.feature-icon {
+  font-size: 1.2rem;
+  color: var(--accent-gold);
+  transition: color 0.3s ease;
+}
+
+.feature-card:hover .feature-icon { color: var(--accent-cyan); }
+
+.feature-body { flex: 1; min-width: 0; }
+
+.feature-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.feature-card:hover .feature-title { color: var(--accent-cyan); }
+
+.feature-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+  transition: color 0.4s ease;
+}
+
+.feature-arrow {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.feature-card:hover .feature-arrow {
+  color: var(--accent-cyan);
+  transform: translateX(4px);
+}
+
+/* ═══════════════════════════════════════════════════════
+   GENERAL CONTAINER (Pasado, Presente, Futuro pages)
+   ═══════════════════════════════════════════════════════ */
 .container {
-  width: 90%; /* Occupy 90% of screen width */
-  margin: 20px auto; /* Center with 5% margin on each side */
-  padding: 20px 5px; /* Reduced horizontal padding for more table width */
-  background-color: rgba(255, 255, 255, 0.05); /* Slightly transparent white background for content area */
-  border-radius: 1rem; /* More rounded corners */
-  box-shadow: 0 8px 20px rgb(229, 255, 0); /* Stronger, darker shadow */
-  flex-grow: 1; /* Allow container to grow on table pages */
+  width: 100%;
+  max-width: 1100px;
+  margin: 1.5rem auto;
+  padding: 1.5rem 1rem;
+  background: var(--bg-card);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px var(--shadow-color);
+  border: 1px solid var(--border-color);
+  transition: background 0.4s ease, border-color 0.4s ease;
 }
 
-/* Header Styles */
 h2 {
-  color: #ffed2d; /* Goldenrod for titles */
-  font-size: 2.2rem; /* Larger, more prominent title */
-  font-weight: 700; /* Bold */
-  margin-bottom: 1.5rem; /* More space below title */
-  text-shadow: 2px 2px 4px rgb(255, 240, 80); /* Text shadow for depth */
-  text-align: center; /* Center align title */
+  color: var(--accent-gold);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  transition: color 0.4s ease;
 }
 
-/* Button Group Styling (for main buttons like "Volver al Home", "Descargar Excel/PDF") */
+/* ═══════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════ */
 .d-flex.gap-2 {
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 15px; /* More space above buttons */
-  margin-bottom: 20px; /* Space below button group */
+  margin-top: 15px;
+  margin-bottom: 20px;
 }
 
 .btn {
-  border-radius: 0.75rem; /* Even more rounded corners */
-  font-weight: 600; /* Semi-bold */
-  transition: all 0.3s ease-in-out; /* Smoother transitions */
-  box-shadow: 0 4px 8px rgb(255, 98, 98); /* More prominent shadow */
-  padding: 0.8rem 1.5rem; /* More comfortable padding */
-  font-size: 1rem; /* Standard font size */
-  text-transform: uppercase; /* Uppercase text for buttons */
-  letter-spacing: 0.05em; /* Slight letter spacing */
-  border: none; /* Remove default border */
+  border-radius: 0.6rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  padding: 0.65rem 1.35rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
 }
 
-.btn:hover {
-  transform: translateY(-3px); /* Stronger lift effect */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
-}
+.btn:hover { transform: translateY(-2px); }
 
-/* Custom Button Colors - Egyptian Palette */
-.btn-primary { /* Volver al Home, Modal Close */
-  background-color: #0A1128; /* Deep Blue */
-  color: #F4D03F; /* Bright Gold text */
-  border: 2px solid #F4D03F; /* Gold border */
+.btn-primary {
+  background: var(--bg-primary);
+  color: var(--accent-gold);
+  border: 1.5px solid var(--accent-gold);
 }
 .btn-primary:hover {
-  background-color: #172A4D; /* Darker blue on hover */
-  color: #00FFFF; /* Neon Cyan text on hover */
-  border-color: #00FFFF;
+  background: var(--accent-gold);
+  color: var(--bg-primary);
 }
 
-.btn-success { /* Descargar Excel / Guardar */
-  background-color: #DAA520; /* Goldenrod */
-  color: #0A1128; /* Deep Blue text */
-  border: 2px solid #0A1128; /* Deep Blue border */
+.btn-success {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  border: 1.5px solid var(--bg-primary);
 }
-.btn-success:hover {
-  background-color: #F4D03F; /* Brighter gold on hover */
-  color: #2C3E50; /* Darker text on hover */
-  border-color: #2C3E50;
-}
+.btn-success:hover { filter: brightness(1.15); }
 
-.btn-danger { /* Descargar PDF */
-  background-color: #2C3E50; /* Dark Gray/Black */
-  color: #DAA520; /* Goldenrod text */
-  border: 2px solid #DAA520; /* Goldenrod border */
+.btn-danger {
+  background: var(--bg-secondary);
+  color: var(--accent-gold);
+  border: 1.5px solid var(--accent-gold);
 }
 .btn-danger:hover {
-  background-color: #172A4D; /* Darker blue on hover */
-  color: #00FFFF; /* Neon Cyan text on hover */
-  border-color: #00FFFF;
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+  border-color: var(--accent-cyan);
 }
 
-.btn-info { /* Editar Ejemplo / Editar Traducción / Comprobar (Modal) */
-  background-color: #00FFFF; /* Neon Cyan */
-  color: #0A1128; /* Deep Blue text */
-  border: 2px solid #0A1128;
+.btn-info {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+  border: 1.5px solid var(--bg-primary);
 }
-.btn-info:hover {
-  background-color: #00E0E0; /* Slightly darker cyan */
-  color: #2C3E50;
-  border-color: #2C3E50;
-}
+.btn-info:hover { filter: brightness(1.1); }
 
-.btn-warning { /* Reiniciar Texto */
-  background-color: #DAA520; /* Goldenrod */
-  color: #0A1128; /* Deep Blue text */
-  border: 2px solid #0A1128;
+.btn-warning {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  border: 1.5px solid var(--bg-primary);
 }
-.btn-warning:hover {
-  background-color: #F4D03F;
-  color: #2C3E50;
-  border-color: #2C3E50;
-}
+.btn-warning:hover { filter: brightness(1.15); }
 
-.btn-secondary { /* Cancelar */
-  background-color: #6c757d; /* Bootstrap default secondary */
-  border-color: #6c757d;
-  color: #FDFEFE;
+.btn-secondary {
+  background: rgba(100, 116, 139, 0.2);
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border-color);
 }
-.btn-secondary:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
-}
+.btn-secondary:hover { background: rgba(100, 116, 139, 0.35); }
 
-
-/* Table Styling */
+/* ═══════════════════════════════════════════════════════
+   TABLE STYLES
+   ═══════════════════════════════════════════════════════ */
 .table-responsive {
-  margin-top: 30px; /* More space above the table */
-  border-radius: 1rem; /* More rounded corners for the responsive container */
-  overflow-x: auto; /* Ensures horizontal scroll if content overflows */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); /* Stronger, deeper shadow for the table */
+  margin-top: 1.5rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  box-shadow: 0 8px 24px var(--shadow-color);
 }
 
 .table {
-  width: 100%; /* Occupy 100% of the .table-responsive container */
+  width: 100%;
   margin-bottom: 0;
   border-collapse: separate;
   border-spacing: 0;
-  background-color: rgba(255, 255, 255, 0.08); /* Slightly transparent background for table */
-  color: #FDFEFE; /* White text for table content */
-  /* min-width removed to allow more aggressive shrinking, overflow-x handles it */
+  background: var(--bg-card);
+  color: var(--text-primary);
 }
 
 .table th,
 .table td {
-  padding: 0.7rem 0.4rem; /* Adjusted padding for cells, slightly smaller */
+  padding: 0.65rem 0.4rem;
   vertical-align: middle;
-  border: 1px solid rgba(255, 255, 255, 0.15); /* Lighter, subtle border */
+  border: 1px solid var(--border-color);
   text-align: center;
-  font-size: 0.7rem; /* Smaller font for table content to fit more */
-  white-space: nowrap; /* Prevent text wrapping in cells by default */
+  font-size: 0.7rem;
+  white-space: nowrap;
 }
 
 .table thead th {
-  background-color: rgba(255, 255, 255, 0.15); /* Slightly more opaque header */
-  color: #DAA520; /* Goldenrod for header text */
+  background: var(--bg-secondary);
+  color: var(--accent-gold);
   font-weight: 700;
-  border-bottom: 2px solid #DAA520; /* Golden border for header bottom */
+  border-bottom: 2px solid var(--accent-gold);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
 }
 
-.table tbody tr:nth-of-type(odd) {
-  background-color: rgba(255, 255, 255, 0.03); /* Very subtle alternate row background */
-}
+.table tbody tr:nth-of-type(odd) { background: rgba(255, 255, 255, 0.02); }
+.table tbody tr:hover { background: rgba(34, 211, 238, 0.08); }
 
-.table tbody tr:hover {
-  background-color: rgba(0, 255, 255, 0.1); /* Subtle neon cyan highlight on hover */
-}
-
-/* Input field in table */
+/* Table input */
 .table .form-control {
-  font-size: 0.7rem; /* Adjusted font size for input */
-  padding: 0.3rem 0.4rem; /* Adjusted padding for input */
+  font-size: 0.7rem;
+  padding: 0.3rem 0.4rem;
   border-radius: 0.4rem;
-  border: 1px solid #DAA520; /* Golden border for inputs */
-  background-color: rgba(0, 0, 0, 0.3); /* Darker input background */
-  color: #FDFEFE; /* White text in input */
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-  width: 100%; /* Ensure input takes full width of its cell */
+  border: 1px solid var(--accent-gold);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text-primary);
+  width: 100%;
 }
-
 .table .form-control:focus {
-  border-color: #00FFFF; /* Neon Cyan focus border */
+  border-color: var(--accent-cyan);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(0, 255, 255, 0.25); /* Neon Cyan glow on focus */
-  background-color: rgba(0, 0, 0, 0.4); /* Slightly darker on focus */
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
 }
 
-/* Action Buttons within table cells */
+/* Table action buttons */
 .table td .btn {
-  padding: 0.2rem 0.35rem; /* Smaller padding for table buttons */
-  font-size: 0.65rem; /* Smaller font for table buttons */
-  min-width: 30px; /* Ensure minimum width for icon buttons */
-  display: inline-flex; /* Use flexbox for icon alignment */
-  align-items: center; /* Center icon vertically */
-  justify-content: center; /* Center icon horizontally */
-  border-radius: 0.5rem; /* Rounded corners for inner buttons */
-  box-shadow: none; /* No shadow for inner buttons */
-  border: 1px solid transparent; /* Default transparent border */
+  padding: 0.2rem 0.35rem;
+  font-size: 0.65rem;
+  min-width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.4rem;
+  box-shadow: none;
 }
+.table td .btn:hover { transform: none; }
 
-.table td .btn:hover {
-  transform: none; /* No lift for inner buttons */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
-}
+/* Column widths */
+.table th:nth-child(1), .table td:nth-child(1) { width: 7%; }
+.table th:nth-child(2), .table td:nth-child(2) { width: 9%; }
+.table th:nth-child(3), .table td:nth-child(3) { width: 11%; }
+.table th:nth-child(4), .table td:nth-child(4) { width: 17%; }
+.table th:nth-child(5), .table td:nth-child(5) { width: 20%; }
+.table th:nth-child(6), .table td:nth-child(6) { width: 5%; }
+.table th:nth-child(7), .table td:nth-child(7) { width: 20%; }
+.table th:nth-child(8), .table td:nth-child(8) { width: 3%; }
+.table th:nth-child(9), .table td:nth-child(9) { width: 8%; }
 
-.table td .btn i.fas, .table td .btn svg { /* Target Font Awesome icons */
-  margin-right: 0; /* Remove space if only icon */
-  font-size: 0.75rem; /* Adjust icon size */
-}
-
-/* Column Width Adjustments (percentages for flexibility) */
-.table th:nth-child(1), /* Tiempo */
-.table td:nth-child(1) {
-  width: 7%;
-}
-
-.table th:nth-child(2), /* Conjugación */
-.table td:nth-child(2) {
-  width: 9%;
-}
-
-.table th:nth-child(3), /* Tipo de oración */
-.table td:nth-child(3) {
-  width: 11%;
-}
-
-.table th:nth-child(4), /* Fórmula */
-.table td:nth-child(4) {
-  width: 17%;
-}
-
-.table th:nth-child(5), /* Ejemplo */
-.table td:nth-child(5) {
-  width: 20%; /* Adjusted for new column */
-}
-
-.table th:nth-child(6), /* Acciones Ejemplo */
-.table td:nth-child(6) {
-  width: 5%; /* More narrow */
-}
-
-.table th:nth-child(7), /* Traducción */
-.table td:nth-child(7) {
-  width: 20%; /* Adjusted for new column */
-}
-
-.table th:nth-child(8), /* Acciones Traducción */
-.table td:nth-child(8) {
-  width: 3%; /* Very narrow for just icon */
-}
-
-.table th:nth-child(9), /* Asistente UIA */
-.table td:nth-child(9) {
-  width: 8%; /* New column width */
-}
-
-/* Responsive adjustments for all pages */
-@media (max-width: 768px) { /* Tablets and smaller */
-  .container {
-    width: 95%; /* Occupy more width on tablets */
-    padding: 15px 5px;
-  }
-  h2 {
-    font-size: 1.8rem;
-  }
-  .btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-  }
-  /* Table specific adjustments for tablets */
-  .table th,
-  .table td {
-    padding: 0.6rem 0.3rem;
-    font-size: 0.7rem;
-  }
-  .table .form-control {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.3rem;
-  }
-  .table td .btn {
-    padding: 0.2rem 0.3rem;
-    font-size: 0.65rem;
-    min-width: 28px;
-  }
-  .table td .btn i.fas, .table td .btn svg {
-    font-size: 0.7rem;
-  }
-}
-
-@media (max-width: 576px) { /* Mobile specific adjustments */
-  .container {
-    width: 98%; /* Occupy almost full width on mobile */
-    padding: 10px 2px; /* Minimal horizontal padding */
-  }
-  h2 {
-    font-size: 1.5rem;
-  }
-  /* Main button group stacking for mobile */
-  .d-flex.gap-2 {
-    flex-direction: column; /* Stack buttons vertically */
-    align-items: stretch; /* Stretch buttons to full width */
-    gap: 10px; /* Space between stacked buttons */
-  }
-  .btn {
-    width: 100%; /* Make main buttons full width */
-  }
-  .table-responsive {
-    border-radius: 0.5rem;
-  }
-  /* Table cell adjustments for mobile */
-  .table th,
-  .table td {
-    padding: 0.5rem 0.2rem; /* Even less padding */
-    font-size: 0.65rem; /* Even smaller font */
-  }
-  .table .form-control {
-    font-size: 0.65rem;
-    padding: 0.2rem 0.2rem;
-  }
-  /* Action buttons stacking for mobile table cells */
-  .table td .btn {
-    flex-direction: column; /* Stack action buttons vertically */
-    width: auto; /* Auto width */
-    margin: 0 1px 3px 1px !important; /* Small margin around buttons */
-    padding: 0.15rem 0.25rem;
-  }
-  .table td .btn i.fas, .table td .btn svg {
-    margin-right: 0;
-    font-size: 0.6rem;
-  }
-  /* Important: For very small screens, horizontal scroll is expected for wide tables.
-     The goal is to make it as compact and readable as possible before scroll is needed. */
-}
-
-/* AI Assistant Modal Styles */
+/* ═══════════════════════════════════════════════════════
+   AI ASSISTANT MODAL
+   ═══════════════════════════════════════════════════════ */
 .assistant-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1050; /* Above other content, similar to Bootstrap modal backdrop */
+  z-index: 1050;
 }
 
 .assistant-modal-content {
-  background-color: #172A4D; /* Dark blue, matching background */
-  color: #FDFEFE; /* White text */
-  padding: 30px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  max-width: 500px; /* Max width for the modal */
-  width: 90%; /* Responsive width */
+  box-shadow: 0 16px 48px var(--shadow-color);
+  max-width: 500px;
+  width: 90%;
   text-align: center;
   position: relative;
-  border: 2px solid #DAA520; /* Goldenrod border */
+  border: 1px solid var(--border-color);
 }
 
 .assistant-modal-content h3 {
-  color: #F4D03F; /* Bright Gold for modal title */
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-.assistant-modal-content h3 svg { /* Icon next to title */
-  margin-right: 10px;
-}
-
-.assistant-initial-message {
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-}
-
-.assistant-feedback {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 1rem;
+  color: var(--accent-gold);
+  font-size: 1.6rem;
   margin-bottom: 1rem;
 }
 
-.assistant-feedback.correct {
-  color: #28a745; /* Green for correct feedback */
-}
-
-.assistant-feedback.incorrect {
-  color: #dc3545; /* Red for incorrect feedback */
-}
-
-.assistant-loading {
-  font-size: 1.1rem;
-  color: #00FFFF; /* Neon Cyan for loading text */
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-.assistant-loading .fa-spinner {
-  margin-left: 10px;
-}
-
-.assistant-suggestion {
-  font-size: 0.95rem;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-  color: #FDFEFE;
-}
-
-.suggestion-text {
-  color: #00FFFF; /* Neon Cyan for clickable suggestion */
-  text-decoration: underline;
-  cursor: pointer;
-  font-weight: 500;
-  transition: color 0.2s ease-in-out;
-}
-
-.suggestion-text:hover {
-  color: #F4D03F; /* Gold on hover */
-}
+.assistant-initial-message { font-size: 1rem; margin-bottom: 1.5rem; line-height: 1.5; }
+.assistant-feedback         { font-size: 1.1rem; font-weight: 600; margin: 1rem 0; }
+.assistant-feedback.correct   { color: #22c55e; }
+.assistant-feedback.incorrect { color: #ef4444; }
+.assistant-loading { font-size: 1rem; color: var(--accent-cyan); margin: 1rem 0; }
+.assistant-suggestion { font-size: 0.9rem; margin: 1rem 0 1.5rem; color: var(--text-primary); }
+.suggestion-text { color: var(--accent-cyan); text-decoration: underline; cursor: pointer; font-weight: 500; }
+.suggestion-text:hover { color: var(--accent-gold); }
 
 .modal-actions {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 12px;
+  margin-top: 1.25rem;
 }
+.modal-actions .btn { font-size: 0.875rem; text-transform: none; letter-spacing: normal; }
 
-.modal-actions .btn {
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  text-transform: none; /* Don't uppercase modal button text */
-  letter-spacing: normal;
-}
-
-/* Responsive adjustments for Modal */
-@media (max-width: 576px) {
-  .assistant-modal-content {
-    padding: 20px;
-    max-width: 95%; /* Even wider on small mobiles */
-  }
-  .assistant-modal-content h3 {
-    font-size: 1.5rem;
-  }
-  .assistant-initial-message,
-  .assistant-feedback,
-  .assistant-loading,
-  .assistant-suggestion {
-    font-size: 0.9rem;
-  }
-  .modal-actions {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .modal-actions .btn {
-    width: 100%;
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-  }
-}
-
-/* Home Page Specific Styles */
-.home-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-  text-align: center;
-  flex-grow: 1; /* Allow it to take available space */
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.05); /* Same as main container */
-  border-radius: 1rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  max-width: 900px; /* Increased max-width for home content */
-  margin: 20px auto; /* Center with margin */
-}
-
-.home-container h1 {
-  color: #F4D03F; /* Bright Gold for main title */
-  font-size: 3.2rem; /* Larger font size */
-  font-weight: 800;
-  margin-bottom: 1.5rem; /* More space below */
-  text-shadow: 4px 4px 8px rgb(255, 234, 7); /* Stronger shadow */
-  line-height: 1.2;
-}
-
-.home-container p {
-  color: #FFFFFF; /* Pure white for paragraph text */
-  font-size: 1.2rem; /* Slightly larger */
-  line-height: 1.8; /* More comfortable line spacing */
-  margin-bottom: 2.5rem; /* More space below */
-  max-width: 700px; /* Increased max-width for paragraph */
-}
-
-.home-container strong {
-  color: #00FFFF; /* Neon Cyan for strong text */
-  font-weight: 700;
-}
-
-.home-container h2 {
-  color: #DAA520; /* Goldenrod for section title */
-  font-size: 2rem; /* Larger */
-  margin-top: 2.5rem; /* More space above */
-  margin-bottom: 1.8rem; /* More space below */
-  text-shadow: 3px 3px 6px rgb(255, 239, 13);
-}
-
-.home-container .buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* More space between buttons */
-  justify-content: center;
-  margin-top: 1.5rem;
-}
-
-.home-container .buttons a {
-  text-decoration: none;
-}
-
-.home-container .buttons button {
-  /* Reusing .btn styles, but customizing for home page */
-  background-color: #3463ff; /* Deep Blue */
-  color: #F4D03F; /* Bright Gold text */
-  border: 2px solid #F4D03F; /* Gold border */
-  padding: 1.2rem 2.5rem; /* Larger padding */
-  font-size: 1.2rem; /* Larger font */
-  border-radius: 0.75rem;
-  font-weight: 700;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 10px rgb(241, 255, 40); /* Stronger shadow */
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.1em; /* More letter spacing */
-}
-
-.home-container .buttons button:hover {
-  background-color: #4989ff; /* Darker blue on hover */
-  color: #00FFFF; /* Neon Cyan text on hover */
-  border-color: #00FFFF;
-  transform: translateY(-5px); /* Stronger lift */
-  box-shadow: 0 8px 18px rgb(255, 237, 45);
-}
-
-/* Responsive adjustments for Home Page */
-@media (max-width: 992px) { /* Adjust breakpoint for larger tablets */
-  .home-container h1 {
-    font-size: 2.8rem;
-  }
-  .home-container p {
-    font-size: 1.1rem;
-  }
-  .home-container h2 {
-    font-size: 1.8rem;
-  }
-  .home-container .buttons button {
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-  }
-}
-
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .home-container {
-    padding: 15px;
-    margin: 15px auto;
-  }
-  .home-container h1 {
-    font-size: 2.2rem;
-  }
-  .home-container p {
-    font-size: 1rem;
-  }
-  .home-container h2 {
-    font-size: 1.6rem;
-  }
-  .home-container .buttons button {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-  }
+  .container { padding: 1rem 0.75rem; }
+  h2 { font-size: 1.5rem; }
+  .btn { padding: 0.55rem 1rem; font-size: 0.875rem; }
 }
 
 @media (max-width: 576px) {
-  .home-container {
-    padding: 10px;
-    margin: 10px auto;
-  }
-  .home-container h1 {
-    font-size: 1.8rem;
-  }
-  .home-container p {
-    font-size: 0.9rem;
-  }
-  .home-container h2 {
-    font-size: 1.4rem;
-  }
-  .home-container .buttons {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .home-container .buttons button {
-    width: 100%;
-    padding: 0.7rem 1.2rem;
-    font-size: 0.9rem;
-  }
+  .container { padding: 0.75rem 0.5rem; }
+  h2 { font-size: 1.3rem; }
+  .d-flex.gap-2 { flex-direction: column; align-items: stretch; gap: 10px; }
+  .btn { width: 100%; }
+  .modal-actions { flex-direction: column; gap: 8px; }
+  .modal-actions .btn { width: 100%; }
 }

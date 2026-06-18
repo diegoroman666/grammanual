@@ -6,6 +6,9 @@ import Presente from './components/Presente.jsx';
 import Futuro from './components/Futuro.jsx';
 import Acerca from './components/Acerca.jsx';
 import Ejercicios from './components/Ejercicios.jsx';
+import Teoria from './components/Teoria.jsx';
+import RutaAprendizaje from './components/RutaAprendizaje.jsx';
+import PruebaContrarreloj from './components/PruebaContrarreloj.jsx';
 import Layout from './components/Layout.jsx';
 
 // Import CSS
@@ -13,6 +16,9 @@ import './styles/main.css';
 import './components/Layout.css';
 import './components/Acerca.css';
 import './components/Ejercicios.css';
+import './components/Teoria.css';
+import './components/RutaAprendizaje.css';
+import './components/PruebaContrarreloj.css';
 
 function App() {
   const [theme, setTheme] = useState('dark');
@@ -47,6 +53,9 @@ function App() {
           <Route path="/futuro" element={<Futuro />} />
           <Route path="/acerca" element={<Acerca />} />
           <Route path="/ejercicios" element={<Ejercicios />} />
+          <Route path="/teoria" element={<Teoria />} />
+          <Route path="/ruta" element={<RutaAprendizaje />} />
+          <Route path="/prueba" element={<PruebaContrarreloj />} />
         </Routes>
       </Layout>
     </Router>

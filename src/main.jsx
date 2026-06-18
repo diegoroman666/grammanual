@@ -2,13 +2,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
-import './styles/main.css'; // Tu CSS actual (déjalo)
 
-// Importa el CSS de Bootstrap
+// 1. Bootstrap base (tables, forms, etc.)
 import 'bootstrap/dist/css/bootstrap.min.css';
-// Importa el JS de Bootstrap y Popper.js (opcional si solo usas el modal de forma simple)
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
+// 2. Tailwind utilities (flex, grid, spacing, etc.)
+import './index.css';
+
+// 3. Custom theme CSS (overrides Bootstrap where needed)
+import './styles/main.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

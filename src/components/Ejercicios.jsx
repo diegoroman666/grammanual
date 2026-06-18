@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFeatherAlt, faBookOpen, faHeadphones, faSpellCheck, faRandom, faVolumeUp, faLanguage, faCheck, faTimes, faArrowRight, faRedo } from '@fortawesome/free-solid-svg-icons';
+import { faFeatherAlt, faBookOpen, faHeadphones, faSpellCheck, faRandom, faVolumeUp, faLanguage, faCheck, faTimes, faArrowRight, faRedo, faGraduationCap, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
+import EjerciciosTeoricos from './EjerciciosTeoricos.jsx';
 import './Ejercicios.css';
 
 // Exercise data
@@ -146,6 +147,7 @@ const exerciseData = [
 ];
 
 const Ejercicios = () => {
+  const [section, setSection] = useState('interactive');
   const [currentExercise, setCurrentExercise] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -161,6 +163,18 @@ const Ejercicios = () => {
 
   const currentFilteredIndex = filteredExercises.findIndex(e => e.id === exercise.id);
   
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    const firstIndex = newFilter === 'all'
+      ? 0
+      : exerciseData.findIndex(e => e.type === newFilter);
+    setCurrentExercise(firstIndex !== -1 ? firstIndex : 0);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setTranslation('');
+    setIsSpeaking(false);
+  };
+
   const handleAnswer = (answer) => {
     if (showResult) return;
     
@@ -177,7 +191,10 @@ const Ejercicios = () => {
       const actualIndex = exerciseData.findIndex(e => e.id === nextExercise.id);
       setCurrentExercise(actualIndex);
     } else {
-      setCurrentExercise(0);
+      const firstIndex = filter === 'all'
+        ? 0
+        : exerciseData.findIndex(e => e.type === filter);
+      setCurrentExercise(firstIndex !== -1 ? firstIndex : 0);
     }
     setSelectedAnswer(null);
     setShowResult(false);
@@ -231,43 +248,65 @@ const Ejercicios = () => {
           <FontAwesomeIcon icon={faBookOpen} />
           Ejercicios de Gramática
         </h1>
-        <p>Selecciona un tipo de ejercicio o practica todos</p>
+        <p>Elige una modalidad de práctica</p>
       </div>
 
+      {/* Section toggle */}
+      <div className="section-toggle">
+        <button
+          className={`section-btn ${section === 'interactive' ? 'active' : ''}`}
+          onClick={() => setSection('interactive')}
+        >
+          <FontAwesomeIcon icon={faPuzzlePiece} />
+          Ejercicios interactivos
+        </button>
+        <button
+          className={`section-btn ${section === 'teoria' ? 'active' : ''}`}
+          onClick={() => setSection('teoria')}
+        >
+          <FontAwesomeIcon icon={faGraduationCap} />
+          Ejercicios teóricos
+        </button>
+      </div>
+
+      {section === 'teoria' && <EjerciciosTeoricos />}
+
+      {section === 'interactive' && (
+      <>
       <div className="filter-buttons">
-        <button 
+        <button
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-          onClick={() => setFilter('all')}
+          onClick={() => handleFilterChange('all')}
         >
           Todos
         </button>
-        <button 
+        <button
           className={`filter-btn ${filter === 'complete' ? 'active' : ''}`}
-          onClick={() => setFilter('complete')}
+          onClick={() => handleFilterChange('complete')}
         >
           <FontAwesomeIcon icon={faFeatherAlt} /> Completar
         </button>
-        <button 
+        <button
           className={`filter-btn ${filter === 'reading' ? 'active' : ''}`}
-          onClick={() => setFilter('reading')}
+          onClick={() => handleFilterChange('reading')}
         >
           <FontAwesomeIcon icon={faBookOpen} /> Lectura
         </button>
-        <button 
+        <button
           className={`filter-btn ${filter === 'audio' ? 'active' : ''}`}
-          onClick={() => setFilter('audio')}
+          onClick={() => handleFilterChange('audio')}
         >
           <FontAwesomeIcon icon={faHeadphones} /> Audio
         </button>
-        <button 
+        <button
           className={`filter-btn ${filter === 'slash' ? 'active' : ''}`}
-          onClick={() => setFilter('slash')}
+          onClick={() => handleFilterChange('slash')}
         >
           <FontAwesomeIcon icon={faRandom} /> Pasado/Presente
         </button>
-        <button 
+        <button
           className={`filter-btn ${filter === 'singular' ? 'active' : ''}`}
-          onClick={() => setFilter('singular')}
+          onClick={() => handleFilterChange('singular')}
         >
           <FontAwesomeIcon icon={faSpellCheck} /> Singular/Plural
         </button>
@@ -427,6 +466,8 @@ const Ejercicios = () => {
           </button>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };
