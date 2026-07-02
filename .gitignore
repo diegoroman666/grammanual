@@ -41,3 +41,5 @@ dist-ssr/
 
 # Other system files
 Thumbs.db       # Archivos de miniaturas de Windows
+# Local Netlify folder
+.netlify

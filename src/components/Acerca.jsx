@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGraduationCap, faBook, faLaptop, faLanguage, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faGraduationCap, faBook, faRoute, faLanguage, faStar } from '@fortawesome/free-solid-svg-icons';
 import './Acerca.css';
 
 const Acerca = () => {
@@ -25,20 +25,20 @@ const Acerca = () => {
       </div>
 
       <div className="acerca-features">
-        <div className="feature-card">
-          <FontAwesomeIcon icon={faBook} className="feature-icon" />
+        <div className="acerca-feature-card">
+          <FontAwesomeIcon icon={faBook} className="acerca-feature-icon" />
           <h3>Gramática Completa</h3>
           <p>Aprende todos los tiempos verbales: Pasado, Presente y Futuro con sus conjugaciones.</p>
         </div>
 
-        <div className="feature-card">
-          <FontAwesomeIcon icon={faLaptop} className="feature-icon" />
-          <h3>Ejercicios Interactivos</h3>
-          <p>Practica con ejercicios de completar oraciones, identificar ideas y comprensión auditiva.</p>
+        <div className="acerca-feature-card">
+          <FontAwesomeIcon icon={faRoute} className="acerca-feature-icon" />
+          <h3>Módulos por Niveles</h3>
+          <p>Supera módulos de Principiante a Experto y desbloquea el siguiente nivel sin perder acceso a los anteriores.</p>
         </div>
 
-        <div className="feature-card">
-          <FontAwesomeIcon icon={faLanguage} className="feature-icon" />
+        <div className="acerca-feature-card">
+          <FontAwesomeIcon icon={faLanguage} className="acerca-feature-icon" />
           <h3>Traducción Automática</h3>
           <p>Traduce ejemplos y frases instantáneamente con nuestro asistente de IA.</p>
         </div>
@@ -55,7 +55,8 @@ const Acerca = () => {
           <li>📊 Vista por tiempo o conjugación - Como prefieras</li>
           <li>📥 Exporta a Excel y PDF - Lleva la gramática contigo</li>
           <li>✏️ Edita ejemplos y traducciones - Personaliza tu aprendizaje</li>
-          <li>🎧 Ejercicios de audio - Practica listening</li>
+          <li>🎧 Práctica libre de lectura y audio - Sin bloqueos ni límites</li>
+          <li>🔥 Racha diaria - Mantén vivo tu hábito de estudio</li>
         </ul>
       </div>
 
@@ -73,8 +74,8 @@ const Acerca = () => {
         <Link to="/" className="btn btn-primary">
           Volver al Inicio
         </Link>
-        <Link to="/ejercicios" className="btn btn-success">
-          Ir a Ejercicios
+        <Link to="/ruta" className="btn btn-success">
+          Ir a Módulos
         </Link>
       </div>
     </div>

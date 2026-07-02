@@ -59,7 +59,7 @@
   margin-bottom: 2rem;
 }
 
-.feature-card {
+.acerca-feature-card {
   padding: 1.5rem;
   background: var(--bg-card);
   border-radius: 1rem;
@@ -67,19 +67,19 @@
   text-align: center;
 }
 
-.feature-icon {
+.acerca-feature-icon {
   font-size: 2rem;
   color: var(--accent-cyan);
   margin-bottom: 1rem;
 }
 
-.feature-card h3 {
+.acerca-feature-card h3 {
   color: var(--accent-gold);
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }
 
-.feature-card p {
+.acerca-feature-card p {
   color: var(--text-secondary);
   font-size: 0.9rem;
 }

@@ -32,12 +32,39 @@
 
 /* ── Tabs ────────────────────────────────────────────────────────────────── */
 
+.teoria-tabs-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.teoria-tab-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.teoria-tab-group-label {
+  color: var(--group-color, var(--text-secondary));
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+  min-width: 108px;
+}
+
 .teoria-tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1.25rem;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .teoria-tab {

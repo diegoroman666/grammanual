@@ -46,6 +46,7 @@
   min-width: 80px;
 }
 
+.stat-icon.streak { color: #ff5722;             font-size: 1.2rem; margin-bottom: 0.25rem; }
 .stat-icon.xp     { color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 0.25rem; }
 .stat-icon.trophy { color: #f39c12;             font-size: 1.2rem; margin-bottom: 0.25rem; }
 .stat-value { color: var(--text-primary); font-size: 1.4rem; font-weight: 800; }
@@ -366,6 +367,47 @@
   pointer-events: none;
 }
 
+/* Práctica libre CTA */
+.practica-libre-cta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.practica-libre-cta:hover {
+  border-color: var(--accent-cyan);
+  background: rgba(0, 255, 255, 0.06);
+}
+
+.practica-libre-cta-icon {
+  color: var(--accent-cyan);
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.practica-libre-cta-title {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.practica-libre-cta-desc {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.practica-libre-cta-arrow {
+  margin-left: auto;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
 /* Responsive */
 @media (max-width: 576px) {
   .ruta-header { flex-direction: column; }
@@ -373,4 +415,5 @@
   .module-card { flex-wrap: wrap; }
   .module-actions { flex-direction: row; width: 100%; }
   .mod-btn { flex: 1; justify-content: center; }
+  .practica-libre-cta { flex-wrap: wrap; }
 }

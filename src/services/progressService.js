@@ -7,14 +7,35 @@ const getStars = (score) => {
   return 0;
 };
 
+const todayStr = () => new Date().toISOString().slice(0, 10);
+
 export const getProgress = () => {
-  try { return JSON.parse(localStorage.getItem(KEY)) || { tests: {}, totalXP: 0 }; }
-  catch { return { tests: {}, totalXP: 0 }; }
+  try {
+    const p = JSON.parse(localStorage.getItem(KEY)) || {};
+    if (!p.tests) p.tests = {};
+    if (!p.streak) p.streak = { current: 0, longest: 0, lastActiveDate: null };
+    return p;
+  } catch {
+    return { tests: {}, totalXP: 0, streak: { current: 0, longest: 0, lastActiveDate: null } };
+  }
+};
+
+const recordActivity = (p) => {
+  const today = todayStr();
+  const streak = p.streak || { current: 0, longest: 0, lastActiveDate: null };
+
+  if (streak.lastActiveDate !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    streak.current = streak.lastActiveDate === yesterday ? streak.current + 1 : 1;
+    streak.longest = Math.max(streak.longest || 0, streak.current);
+    streak.lastActiveDate = today;
+  }
+  p.streak = streak;
+  return p;
 };
 
 export const saveTestResult = (moduleId, score) => {
   const p = getProgress();
-  if (!p.tests) p.tests = {};
   const prev = p.tests[moduleId];
   const isHighScore = !prev || score > prev.bestScore;
   p.tests[moduleId] = {
@@ -24,11 +45,14 @@ export const saveTestResult = (moduleId, score) => {
     lastDate: new Date().toISOString(),
   };
   p.totalXP = Object.values(p.tests).reduce((acc, t) => acc + t.bestScore, 0);
+  recordActivity(p);
   localStorage.setItem(KEY, JSON.stringify(p));
   return { isHighScore, prevBest: prev?.bestScore || 0 };
 };
 
 export const getModuleResult = (moduleId) => getProgress().tests?.[moduleId] || null;
+
+export const getStreak = () => getProgress().streak;
 
 export const isLevelUnlocked = (level) => {
   if (level === 'beginner') return true;

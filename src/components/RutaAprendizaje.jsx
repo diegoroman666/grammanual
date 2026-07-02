@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLock, faStar, faTrophy, faBook, faBolt,
-  faChartLine, faGraduationCap, faPlay, faRedo
+  faChartLine, faGraduationCap, faPlay, faRedo, faFire, faHeadphones
 } from '@fortawesome/free-solid-svg-icons';
 import { modules, levelMeta, getStars, MAX_SCORE } from '../data/pruebaData';
 import { getProgress, isLevelUnlocked, clearProgress } from '../services/progressService';
@@ -122,6 +122,11 @@ const RutaAprendizaje = () => {
           <p>Sigue el orden recomendado y construye tu inglés paso a paso</p>
         </div>
         <div className="ruta-stats">
+          <div className="stat-box" title={`Racha más larga: ${progress.streak?.longest || 0} días`}>
+            <FontAwesomeIcon icon={faFire} className="stat-icon streak" />
+            <span className="stat-value">{progress.streak?.current || 0}</span>
+            <span className="stat-label">Racha diaria</span>
+          </div>
           <div className="stat-box">
             <FontAwesomeIcon icon={faBolt} className="stat-icon xp" />
             <span className="stat-value">{progress.totalXP || 0}</span>
@@ -208,6 +213,16 @@ const RutaAprendizaje = () => {
         </div>
         <LearningCurve progress={progress} />
       </div>
+
+      {/* Práctica libre */}
+      <Link to="/practica-libre" className="practica-libre-cta">
+        <FontAwesomeIcon icon={faHeadphones} className="practica-libre-cta-icon" />
+        <div>
+          <div className="practica-libre-cta-title">Práctica Libre: Lectura y Audio</div>
+          <div className="practica-libre-cta-desc">Refuerza comprensión lectora y auditiva, sin bloqueos ni límites</div>
+        </div>
+        <FontAwesomeIcon icon={faPlay} className="practica-libre-cta-arrow" />
+      </Link>
     </div>
   );
 };

@@ -1,0 +1,219 @@
+/* ── Cómo Aprender (roadmap) Page ───────────────────────────────────────── */
+
+.comoaprender-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.comoaprender-header {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.comoaprender-header h1 {
+  color: var(--accent-gold);
+  font-size: 1.8rem;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.comoaprender-header p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.comoaprender-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.1rem 1.25rem;
+  background: rgba(0, 255, 255, 0.08);
+  border: 1px solid var(--accent-cyan);
+  border-radius: 0.9rem;
+}
+
+.comoaprender-intro-icon {
+  color: var(--accent-cyan);
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.comoaprender-intro p {
+  margin: 0;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.comoaprender-intro strong {
+  color: var(--accent-cyan);
+}
+
+/* ── Stage (level) sections ─────────────────────────────────────────────── */
+
+.stage-section {
+  background: var(--bg-card);
+  border: 2px solid var(--stage-border, var(--border-color));
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.stage-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--stage-bg, rgba(255,255,255,0.04));
+  border-bottom: 1px solid var(--stage-border, var(--border-color));
+}
+
+.stage-emoji { font-size: 1.9rem; line-height: 1; }
+
+.stage-title {
+  color: var(--stage-color, var(--text-primary));
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0 0 0.3rem;
+}
+
+.stage-text {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Timeline of steps ──────────────────────────────────────────────────── */
+
+.stage-timeline {
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.stage-step {
+  display: flex;
+  gap: 0.9rem;
+}
+
+.stage-step-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.stage-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--stage-color, var(--accent-cyan));
+  color: var(--bg-primary);
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stage-step-line {
+  flex: 1;
+  width: 2px;
+  min-height: 1.25rem;
+  background: var(--stage-border, var(--border-color));
+  margin: 0.15rem 0;
+}
+
+.stage-step-body {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 1.25rem;
+}
+
+.stage-step-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.stage-step-emoji { font-size: 1.15rem; }
+
+.stage-step-title {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.02rem;
+}
+
+.stage-step-done { color: #27ae60; font-size: 0.9rem; margin-left: 0.15rem; }
+
+.stage-step-desc {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin: 0 0 0.5rem;
+}
+
+.stage-step-why {
+  background: rgba(255, 215, 0, 0.1);
+  border-left: 3px solid var(--accent-gold);
+  border-radius: 0.4rem;
+  padding: 0.55rem 0.75rem;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 0.65rem;
+}
+
+.stage-step-why strong { color: var(--accent-gold); }
+
+.stage-step-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.stage-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.stage-btn-theory:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+
+.stage-btn-play {
+  background: var(--stage-color, var(--accent-gold));
+  border-color: var(--stage-color, var(--accent-gold));
+  color: var(--bg-primary);
+}
+.stage-btn-play:hover { filter: brightness(1.1); }
+
+.stage-btn-locked {
+  color: var(--text-secondary);
+  cursor: default;
+  opacity: 0.75;
+}
+
+@media (max-width: 576px) {
+  .comoaprender-header h1 { font-size: 1.4rem; }
+  .stage-header { flex-direction: column; }
+}

@@ -1,11 +1,11 @@
-/* Ejercicios Page Styles */
-.ejercicios-container {
+/* Práctica Libre Page Styles */
+.practica-libre-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 1rem;
 }
 
-.ejercicios-header {
+.practica-libre-header {
   text-align: center;
   margin-bottom: 1.5rem;
   padding: 1.5rem;
@@ -14,7 +14,7 @@
   border: 1px solid var(--border-color);
 }
 
-.ejercicios-header h1 {
+.practica-libre-header h1 {
   color: var(--accent-gold);
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
@@ -24,51 +24,9 @@
   gap: 0.5rem;
 }
 
-.ejercicios-header p {
+.practica-libre-header p {
   color: var(--text-secondary);
   margin: 0;
-}
-
-/* Section Toggle */
-.section-toggle {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-  justify-content: center;
-}
-
-.section-btn {
-  flex: 1;
-  max-width: 260px;
-  background: var(--bg-card);
-  border: 2px solid var(--border-color);
-  color: var(--text-secondary);
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
-}
-
-.section-btn:hover {
-  border-color: var(--accent-cyan);
-  color: var(--accent-cyan);
-}
-
-.section-btn.active {
-  background: var(--accent-gold);
-  border-color: var(--accent-gold);
-  color: var(--bg-primary);
-}
-
-@media (max-width: 576px) {
-  .section-toggle { flex-direction: column; }
-  .section-btn { max-width: 100%; }
 }
 
 /* Filter Buttons */
@@ -144,33 +102,6 @@
   font-size: 1.2rem;
   margin-bottom: 1rem;
   line-height: 1.5;
-}
-
-/* Sentence Blank */
-.sentence-blank {
-  background: rgba(0, 255, 255, 0.1);
-  border: 1px solid var(--accent-cyan);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-.formula-text {
-  color: var(--accent-cyan);
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.time-info {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  margin: 0 0 0.5rem 0;
-}
-
-.sentence-text {
-  color: var(--text-primary);
-  font-size: 1rem;
 }
 
 /* Reading Text */
@@ -279,22 +210,37 @@
   gap: 0.5rem;
 }
 
-/* Sentence Highlight */
-.sentence-highlight {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(0, 255, 255, 0.15) 100%);
-  border: 2px solid var(--accent-gold);
-  border-radius: 0.75rem;
-  padding: 1.25rem;
-  margin-bottom: 1rem;
+.audio-section-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
-.sentence-highlight p {
-  color: var(--text-primary);
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-align: center;
-  margin: 0;
-  line-height: 1.6;
+/* Restart button (secondary action next to play/pause) */
+.restart-btn {
+  background: transparent;
+  color: var(--accent-gold);
+  border: 1px solid var(--accent-gold);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.restart-btn:hover:not(:disabled) {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+}
+
+.restart-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* Answer Options */
@@ -462,7 +408,7 @@
 
 /* Responsive */
 @media (max-width: 576px) {
-  .ejercicios-header h1 {
+  .practica-libre-header h1 {
     font-size: 1.4rem;
   }
 
@@ -504,4 +450,3 @@
     justify-content: center;
   }
 }
-

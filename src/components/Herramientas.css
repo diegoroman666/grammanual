@@ -1,0 +1,221 @@
+/* ── Herramientas Page ───────────────────────────────────────────────────── */
+
+.herramientas-container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 1.5rem auto;
+  padding: 1.5rem 1.25rem;
+  background: var(--bg-card);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px var(--shadow-color);
+  border: 1px solid var(--border-color);
+}
+
+.herramientas-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.herramientas-header h1 {
+  color: var(--accent-gold);
+  font-size: 1.8rem;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.herramientas-header p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Tabs ────────────────────────────────────────────────────────────────── */
+
+.herramientas-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.herramientas-tab {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.herramientas-tab:hover {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+  border-color: var(--accent-cyan);
+}
+
+.herramientas-tab.active {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  border-color: var(--accent-gold);
+}
+
+/* ── Actions ─────────────────────────────────────────────────────────────── */
+
+.herramientas-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.herramientas-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem;
+}
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+
+/* Fixed layout with fixed column widths keeps the 4 columns inside the
+   container's width, avoiding the horizontal scroll of the old 6-column
+   layout (which had two separate "Acciones" columns). */
+.herramientas-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.herramientas-table .col-tipo       { width: 16%; }
+.herramientas-table .col-formula    { width: 20%; }
+.herramientas-table .col-ejemplo    { width: 32%; }
+.herramientas-table .col-traduccion { width: 32%; }
+
+/* main.css sets a global `.table td { white-space: nowrap }` for other
+   compact tables in the app — override it here (with element-qualified
+   selectors for higher specificity) so long fórmula/ejemplo text wraps
+   inside its fixed column instead of overflowing into the next one. */
+table.herramientas-table th,
+table.herramientas-table td {
+  white-space: normal;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.herramientas-table td {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  vertical-align: middle;
+}
+
+.cell-view-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.cell-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.cell-actions {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.cell-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cell-edit-row .form-control {
+  flex: 1;
+  min-width: 0;
+}
+
+.icon-btn-sm {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.35rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: all 0.15s ease;
+}
+
+.icon-btn-sm:hover { transform: translateY(-1px); }
+
+.icon-btn-info    { background: #17a2b8; color: #fff; }
+.icon-btn-warning { background: #ffc107; color: #000; }
+.icon-btn-success { background: #28a745; color: #fff; }
+.icon-btn-secondary { background: #6c757d; color: #fff; }
+
+@media (max-width: 640px) {
+  .herramientas-header h1 { font-size: 1.4rem; }
+  .herramientas-tab { padding: 0.45rem 0.8rem; font-size: 0.85rem; }
+  .cell-view-row { flex-direction: column; }
+  .cell-actions { align-self: flex-end; }
+}
+
+/* Below 576px the 4 fixed-percentage columns get too narrow to read
+   (e.g. "Fórmula" at 20% of a 320-400px screen breaks every word onto
+   its own line). Switch to a stacked card per row instead: each cell
+   becomes a full-width block with its column name as a small label. */
+@media (max-width: 576px) {
+  .herramientas-table,
+  .herramientas-table tbody,
+  .herramientas-table tr,
+  .herramientas-table td {
+    display: block;
+    width: 100% !important;
+  }
+
+  .herramientas-table thead { display: none; }
+
+  .herramientas-table tr {
+    margin-bottom: 0.85rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.6rem;
+    overflow: hidden;
+  }
+
+  .herramientas-table tr:last-child { margin-bottom: 0; }
+
+  .herramientas-table td {
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.6rem 0.75rem;
+  }
+
+  .herramientas-table td:last-child { border-bottom: none; }
+
+  .herramientas-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent-gold);
+    margin-bottom: 0.3rem;
+  }
+}

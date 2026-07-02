@@ -1,8 +1,8 @@
 // src/services/translateApi.js
-export const translateText = async (text) => {
+export const translateText = async (text, langpair = 'en|es') => {
   try {
     const response = await fetch(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|es`
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langpair}`
     );
     const data = await response.json();
     return data.responseData.translatedText;

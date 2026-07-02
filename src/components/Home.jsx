@@ -1,62 +1,40 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faGraduationCap, faPencilAlt, faRoute, faBolt,
-  faArrowRight,
+  faGraduationCap, faToolbox, faRoute, faFire, faBolt,
+  faArrowRight, faPlay, faListOl,
 } from '@fortawesome/free-solid-svg-icons';
+import { getProgress } from '../services/progressService';
 
-const TIME_CARDS = [
-  {
-    path: '/pasado',
-    emoji: '⏮',
-    label: 'Pasado',
-    desc: 'Past Simple, Continuous & Perfect',
-    accent: 'card-accent-red',
-  },
-  {
-    path: '/presente',
-    emoji: '⏯',
-    label: 'Presente',
-    desc: 'Present Simple, Continuous & Perfect',
-    accent: 'card-accent-green',
-  },
-  {
-    path: '/futuro',
-    emoji: '⏭',
-    label: 'Futuro',
-    desc: 'Future Simple, Going to & Will',
-    accent: 'card-accent-blue',
-  },
-];
-
-const FEATURE_CARDS = [
+const PILLAR_CARDS = [
   {
     path: '/teoria',
     icon: faGraduationCap,
     label: 'Teoría',
-    desc: 'Gramática explicada de forma clara y estructurada',
+    desc: 'Consulta las reglas gramaticales explicadas de forma clara y estructurada',
   },
   {
-    path: '/ejercicios',
-    icon: faPencilAlt,
-    label: 'Ejercicios',
-    desc: 'Practica con ejercicios interactivos y corrección automática',
+    path: '/herramientas',
+    icon: faToolbox,
+    label: 'Herramientas',
+    desc: 'Fórmulas de pasado, presente y futuro, editables y exportables a Excel/PDF',
   },
   {
     path: '/ruta',
     icon: faRoute,
-    label: 'Ruta de Aprendizaje',
-    desc: 'Sigue un camino estructurado de principiante a avanzado',
-  },
-  {
-    path: '/prueba',
-    icon: faBolt,
-    label: 'Prueba Contrarreloj',
-    desc: 'Pon a prueba tu velocidad y tu conocimiento bajo presión',
+    label: 'Módulos',
+    desc: 'Tu curso: supera módulos de principiante a experto y ponte a prueba cuando quieras',
   },
 ];
 
 export default function Home() {
+  const [progress, setProgress] = useState(null);
+
+  useEffect(() => { setProgress(getProgress()); }, []);
+
+  const started = progress && progress.totalXP > 0;
+
   return (
     <div className="home-page">
 
@@ -68,34 +46,53 @@ export default function Home() {
           <span className="hero-gradient">GramManual</span>
         </h1>
         <p className="hero-desc">
-          Aprende gramática en inglés de forma interactiva y divertida.{' '}
-          <strong className="hero-strong">Tú eres el protagonista</strong>{' '}
-          de tu propio aprendizaje.
+          Un curso progresivo de gramática en inglés, de principiante a experto.{' '}
+          <strong className="hero-strong">Un poco cada día</strong>{' '}
+          construye el hábito que te lleva a dominarlo.
         </p>
+        <Link to="/como-aprender" className="hero-roadmap-link">
+          <FontAwesomeIcon icon={faListOl} /> ¿Por dónde empiezo? Mira el mapa de aprendizaje
+        </Link>
       </section>
 
-      {/* ── Time travel section ── */}
-      <section className="home-section">
-        <h2 className="section-heading">¿A qué tiempo deseas viajar?</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-6">
-          {TIME_CARDS.map(({ path, emoji, label, desc, accent }) => (
-            <Link key={path} to={path} className={`time-card ${accent}`}>
-              <span className="time-card-emoji">{emoji}</span>
-              <h3 className="time-card-title">{label}</h3>
-              <p className="time-card-desc">{desc}</p>
-              <span className="time-card-arrow">
-                <FontAwesomeIcon icon={faArrowRight} />
-              </span>
+      {/* ── Course status / CTA ── */}
+      {progress && (
+        <section className="home-section">
+          <div className="home-status">
+            {started && (
+              <div className="home-status-stats">
+                <div className="stat-box">
+                  <FontAwesomeIcon icon={faFire} className="stat-icon streak" />
+                  <span className="stat-value">{progress.streak?.current || 0}</span>
+                  <span className="stat-label">Racha diaria</span>
+                </div>
+                <div className="stat-box">
+                  <FontAwesomeIcon icon={faBolt} className="stat-icon xp" />
+                  <span className="stat-value">{progress.totalXP}</span>
+                  <span className="stat-label">XP Total</span>
+                </div>
+              </div>
+            )}
+            <h3 className="home-status-title">
+              {started ? '¡Sigue así!' : 'Empieza tu curso hoy'}
+            </h3>
+            <p className="home-status-desc">
+              {started
+                ? 'Continúa tu ruta de aprendizaje y mantén viva tu racha.'
+                : 'La Ruta de Aprendizaje te guía módulo a módulo, del nivel principiante al experto.'}
+            </p>
+            <Link to="/ruta" className="home-status-cta">
+              {started ? 'Continuar mi curso' : 'Comenzar el curso'} <FontAwesomeIcon icon={started ? faArrowRight : faPlay} />
             </Link>
-          ))}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
-      {/* ── Features section ── */}
+      {/* ── Pillars section ── */}
       <section className="home-section">
-        <h2 className="section-heading">Explora el contenido</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-          {FEATURE_CARDS.map(({ path, icon, label, desc }) => (
+        <h2 className="section-heading">Tu curso en 3 pilares</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+          {PILLAR_CARDS.map(({ path, icon, label, desc }) => (
             <Link key={path} to={path} className="feature-card">
               <div className="feature-icon-wrap">
                 <FontAwesomeIcon icon={icon} className="feature-icon" />

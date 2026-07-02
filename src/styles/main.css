@@ -58,6 +58,82 @@
   -webkit-text-fill-color: var(--accent-cyan);
 }
 
+.hero-roadmap-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.hero-roadmap-link:hover {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+}
+
+/* Course status / CTA */
+.home-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  padding: 1.75rem 1.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+}
+
+.home-status-stats {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.home-status-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.home-status-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  max-width: 460px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.home-status-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+  color: var(--bg-primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-status-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px var(--shadow-color);
+}
+
 /* Section headings */
 .home-section {
   margin-bottom: 3rem;
@@ -235,7 +311,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   GENERAL CONTAINER (Pasado, Presente, Futuro pages)
+   GENERAL CONTAINER (Herramientas page)
    ═══════════════════════════════════════════════════════ */
 .container {
   width: 100%;

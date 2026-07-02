@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home.jsx';
-import Pasado from './components/Pasado.jsx';
-import Presente from './components/Presente.jsx';
-import Futuro from './components/Futuro.jsx';
 import Acerca from './components/Acerca.jsx';
-import Ejercicios from './components/Ejercicios.jsx';
+import ComoAprender from './components/ComoAprender.jsx';
 import Teoria from './components/Teoria.jsx';
+import Herramientas from './components/Herramientas.jsx';
 import RutaAprendizaje from './components/RutaAprendizaje.jsx';
 import PruebaContrarreloj from './components/PruebaContrarreloj.jsx';
+import PracticaLibre from './components/PracticaLibre.jsx';
 import Layout from './components/Layout.jsx';
 
 // Import CSS
 import './styles/main.css';
 import './components/Layout.css';
 import './components/Acerca.css';
-import './components/Ejercicios.css';
+import './components/ComoAprender.css';
+import './components/PracticaLibre.css';
 import './components/Teoria.css';
+import './components/Herramientas.css';
 import './components/RutaAprendizaje.css';
 import './components/PruebaContrarreloj.css';
 
@@ -48,14 +49,13 @@ function App() {
       <Layout theme={theme} toggleTheme={toggleTheme}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/pasado" element={<Pasado />} />
-          <Route path="/presente" element={<Presente />} />
-          <Route path="/futuro" element={<Futuro />} />
+          <Route path="/como-aprender" element={<ComoAprender />} />
           <Route path="/acerca" element={<Acerca />} />
-          <Route path="/ejercicios" element={<Ejercicios />} />
           <Route path="/teoria" element={<Teoria />} />
+          <Route path="/herramientas" element={<Herramientas />} />
           <Route path="/ruta" element={<RutaAprendizaje />} />
           <Route path="/prueba" element={<PruebaContrarreloj />} />
+          <Route path="/practica-libre" element={<PracticaLibre />} />
         </Routes>
       </Layout>
     </Router>

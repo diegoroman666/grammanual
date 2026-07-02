@@ -6,60 +6,61 @@ import {
   faGraduationCap, faSearch, faChevronDown, faChevronUp,
   faLink, faSitemap, faCodeBranch, faExchangeAlt, faCogs
 } from '@fortawesome/free-solid-svg-icons';
+import { levelMeta } from '../data/pruebaData';
 import './Teoria.css';
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const irregularVerbs = [
-  { base: 'be',         past: 'was / were', participle: 'been' },
-  { base: 'begin',      past: 'began',      participle: 'begun' },
-  { base: 'break',      past: 'broke',      participle: 'broken' },
-  { base: 'bring',      past: 'brought',    participle: 'brought' },
-  { base: 'buy',        past: 'bought',     participle: 'bought' },
-  { base: 'catch',      past: 'caught',     participle: 'caught' },
-  { base: 'choose',     past: 'chose',      participle: 'chosen' },
-  { base: 'come',       past: 'came',       participle: 'come' },
-  { base: 'do',         past: 'did',        participle: 'done' },
-  { base: 'drink',      past: 'drank',      participle: 'drunk' },
-  { base: 'drive',      past: 'drove',      participle: 'driven' },
-  { base: 'eat',        past: 'ate',        participle: 'eaten' },
-  { base: 'fall',       past: 'fell',       participle: 'fallen' },
-  { base: 'feel',       past: 'felt',       participle: 'felt' },
-  { base: 'find',       past: 'found',      participle: 'found' },
-  { base: 'fly',        past: 'flew',       participle: 'flown' },
-  { base: 'forget',     past: 'forgot',     participle: 'forgotten' },
-  { base: 'get',        past: 'got',        participle: 'gotten' },
-  { base: 'give',       past: 'gave',       participle: 'given' },
-  { base: 'go',         past: 'went',       participle: 'gone' },
-  { base: 'grow',       past: 'grew',       participle: 'grown' },
-  { base: 'have',       past: 'had',        participle: 'had' },
-  { base: 'hear',       past: 'heard',      participle: 'heard' },
-  { base: 'keep',       past: 'kept',       participle: 'kept' },
-  { base: 'know',       past: 'knew',       participle: 'known' },
-  { base: 'leave',      past: 'left',       participle: 'left' },
-  { base: 'lose',       past: 'lost',       participle: 'lost' },
-  { base: 'make',       past: 'made',       participle: 'made' },
-  { base: 'meet',       past: 'met',        participle: 'met' },
-  { base: 'put',        past: 'put',        participle: 'put' },
-  { base: 'read',       past: 'read',       participle: 'read' },
-  { base: 'run',        past: 'ran',        participle: 'run' },
-  { base: 'say',        past: 'said',       participle: 'said' },
-  { base: 'see',        past: 'saw',        participle: 'seen' },
-  { base: 'sell',       past: 'sold',       participle: 'sold' },
-  { base: 'send',       past: 'sent',       participle: 'sent' },
-  { base: 'sleep',      past: 'slept',      participle: 'slept' },
-  { base: 'speak',      past: 'spoke',      participle: 'spoken' },
-  { base: 'spend',      past: 'spent',      participle: 'spent' },
-  { base: 'swim',       past: 'swam',       participle: 'swum' },
-  { base: 'take',       past: 'took',       participle: 'taken' },
-  { base: 'teach',      past: 'taught',     participle: 'taught' },
-  { base: 'tell',       past: 'told',       participle: 'told' },
-  { base: 'think',      past: 'thought',    participle: 'thought' },
-  { base: 'understand', past: 'understood', participle: 'understood' },
-  { base: 'wake',       past: 'woke',       participle: 'woken' },
-  { base: 'wear',       past: 'wore',       participle: 'worn' },
-  { base: 'win',        past: 'won',        participle: 'won' },
-  { base: 'write',      past: 'wrote',      participle: 'written' },
+  { base: 'be',         past: 'was / were', participle: 'been',      meaning: 'ser / estar' },
+  { base: 'begin',      past: 'began',      participle: 'begun',     meaning: 'comenzar' },
+  { base: 'break',      past: 'broke',      participle: 'broken',    meaning: 'romper' },
+  { base: 'bring',      past: 'brought',    participle: 'brought',   meaning: 'traer' },
+  { base: 'buy',        past: 'bought',     participle: 'bought',    meaning: 'comprar' },
+  { base: 'catch',      past: 'caught',     participle: 'caught',    meaning: 'atrapar' },
+  { base: 'choose',     past: 'chose',      participle: 'chosen',    meaning: 'elegir' },
+  { base: 'come',       past: 'came',       participle: 'come',      meaning: 'venir' },
+  { base: 'do',         past: 'did',        participle: 'done',      meaning: 'hacer' },
+  { base: 'drink',      past: 'drank',      participle: 'drunk',     meaning: 'beber' },
+  { base: 'drive',      past: 'drove',      participle: 'driven',    meaning: 'conducir' },
+  { base: 'eat',        past: 'ate',        participle: 'eaten',     meaning: 'comer' },
+  { base: 'fall',       past: 'fell',       participle: 'fallen',    meaning: 'caer' },
+  { base: 'feel',       past: 'felt',       participle: 'felt',      meaning: 'sentir' },
+  { base: 'find',       past: 'found',      participle: 'found',     meaning: 'encontrar' },
+  { base: 'fly',        past: 'flew',       participle: 'flown',     meaning: 'volar' },
+  { base: 'forget',     past: 'forgot',     participle: 'forgotten', meaning: 'olvidar' },
+  { base: 'get',        past: 'got',        participle: 'gotten',    meaning: 'obtener' },
+  { base: 'give',       past: 'gave',       participle: 'given',     meaning: 'dar' },
+  { base: 'go',         past: 'went',       participle: 'gone',      meaning: 'ir' },
+  { base: 'grow',       past: 'grew',       participle: 'grown',     meaning: 'crecer' },
+  { base: 'have',       past: 'had',        participle: 'had',       meaning: 'tener' },
+  { base: 'hear',       past: 'heard',      participle: 'heard',     meaning: 'oír' },
+  { base: 'keep',       past: 'kept',       participle: 'kept',      meaning: 'mantener' },
+  { base: 'know',       past: 'knew',       participle: 'known',     meaning: 'saber / conocer' },
+  { base: 'leave',      past: 'left',       participle: 'left',      meaning: 'dejar / salir' },
+  { base: 'lose',       past: 'lost',       participle: 'lost',      meaning: 'perder' },
+  { base: 'make',       past: 'made',       participle: 'made',      meaning: 'hacer / fabricar' },
+  { base: 'meet',       past: 'met',        participle: 'met',       meaning: 'conocer / reunirse' },
+  { base: 'put',        past: 'put',        participle: 'put',       meaning: 'poner' },
+  { base: 'read',       past: 'read',       participle: 'read',      meaning: 'leer' },
+  { base: 'run',        past: 'ran',        participle: 'run',       meaning: 'correr' },
+  { base: 'say',        past: 'said',       participle: 'said',      meaning: 'decir' },
+  { base: 'see',        past: 'saw',        participle: 'seen',      meaning: 'ver' },
+  { base: 'sell',       past: 'sold',       participle: 'sold',      meaning: 'vender' },
+  { base: 'send',       past: 'sent',       participle: 'sent',      meaning: 'enviar' },
+  { base: 'sleep',      past: 'slept',      participle: 'slept',     meaning: 'dormir' },
+  { base: 'speak',      past: 'spoke',      participle: 'spoken',    meaning: 'hablar' },
+  { base: 'spend',      past: 'spent',      participle: 'spent',     meaning: 'gastar / pasar (tiempo)' },
+  { base: 'swim',       past: 'swam',       participle: 'swum',      meaning: 'nadar' },
+  { base: 'take',       past: 'took',       participle: 'taken',     meaning: 'tomar' },
+  { base: 'teach',      past: 'taught',     participle: 'taught',    meaning: 'enseñar' },
+  { base: 'tell',       past: 'told',       participle: 'told',      meaning: 'contar / decir' },
+  { base: 'think',      past: 'thought',    participle: 'thought',   meaning: 'pensar' },
+  { base: 'understand', past: 'understood', participle: 'understood',meaning: 'entender' },
+  { base: 'wake',       past: 'woke',       participle: 'woken',     meaning: 'despertar' },
+  { base: 'wear',       past: 'wore',       participle: 'worn',      meaning: 'llevar puesto' },
+  { base: 'win',        past: 'won',        participle: 'won',       meaning: 'ganar' },
+  { base: 'write',      past: 'wrote',      participle: 'written',   meaning: 'escribir' },
 ];
 
 const regularVerbs = [
@@ -576,7 +577,8 @@ const IrregularVerbsSection = () => {
   const filtered = irregularVerbs.filter(v =>
     v.base.startsWith(search.toLowerCase()) ||
     v.past.includes(search.toLowerCase()) ||
-    v.participle.includes(search.toLowerCase())
+    v.participle.includes(search.toLowerCase()) ||
+    v.meaning.toLowerCase().includes(search.toLowerCase())
   );
   return (
     <div className="teoria-section">
@@ -590,17 +592,18 @@ const IrregularVerbsSection = () => {
       </div>
       <div className="search-bar">
         <FontAwesomeIcon icon={faSearch} />
-        <input type="text" placeholder="Buscar verbo..." value={search} onChange={e => setSearch(e.target.value)} />
+        <input type="text" placeholder="Buscar verbo o significado..." value={search} onChange={e => setSearch(e.target.value)} />
       </div>
       <div className="verb-table-wrapper">
         <table className="verb-table">
-          <thead><tr><th>Forma base</th><th>Pasado simple</th><th>Participio pasado</th></tr></thead>
+          <thead><tr><th>Forma base</th><th>Pasado simple</th><th>Participio pasado</th><th>Significado</th></tr></thead>
           <tbody>
             {filtered.map((v, i) => (
               <tr key={i}>
                 <td className="base-form">{v.base}</td>
                 <td className="past-form">{v.past}</td>
                 <td className="participle-form">{v.participle}</td>
+                <td className="meaning-form">{v.meaning}</td>
               </tr>
             ))}
           </tbody>
@@ -983,23 +986,26 @@ const ModalVerbsSection = () => {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
+// Orden pedagógico: cada tema se agrupa en el nivel donde se introduce por
+// primera vez en la Ruta de Aprendizaje (ver `modules` en pruebaData.js),
+// para que Teoría se recorra en el mismo orden cronológico que el curso.
 const tabs = [
-  { id: 'irregular',   label: 'Verbos irregulares',      icon: faListUl },
-  { id: 'regular',     label: 'Verbos regulares',         icon: faListUl },
-  { id: 'adverbs',     label: 'Adverbios de frecuencia',  icon: faClock },
-  { id: 'place',       label: 'Complemento de lugar',     icon: faMapMarkerAlt },
-  { id: 'time',        label: 'Complemento de tiempo',    icon: faClock },
-  { id: 'wquestions',  label: 'W Questions',              icon: faQuestion },
-  { id: 'connectors',  label: 'Conectores',               icon: faLink },
-  { id: 'prepositions',label: 'Preposiciones',            icon: faSitemap },
-  { id: 'conditionals',label: 'Condicionales',            icon: faCodeBranch },
-  { id: 'passive',     label: 'Voz pasiva',               icon: faExchangeAlt },
-  { id: 'modals',      label: 'Verbos modales',           icon: faCogs },
+  { id: 'regular',     label: 'Verbos regulares',         icon: faListUl,      level: 'beginner' },
+  { id: 'irregular',   label: 'Verbos irregulares',       icon: faListUl,      level: 'beginner' },
+  { id: 'adverbs',     label: 'Adverbios de frecuencia',  icon: faClock,       level: 'beginner' },
+  { id: 'place',       label: 'Complemento de lugar',     icon: faMapMarkerAlt, level: 'beginner' },
+  { id: 'time',        label: 'Complemento de tiempo',    icon: faClock,       level: 'beginner' },
+  { id: 'wquestions',  label: 'W Questions',              icon: faQuestion,    level: 'beginner' },
+  { id: 'prepositions',label: 'Preposiciones',            icon: faSitemap,     level: 'intermediate' },
+  { id: 'modals',      label: 'Verbos modales',           icon: faCogs,        level: 'intermediate' },
+  { id: 'connectors',  label: 'Conectores',               icon: faLink,        level: 'intermediate' },
+  { id: 'conditionals',label: 'Condicionales',            icon: faCodeBranch,  level: 'expert' },
+  { id: 'passive',     label: 'Voz pasiva',               icon: faExchangeAlt, level: 'expert' },
 ];
 
 const Teoria = () => {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState(location.state?.tab || 'irregular');
+  const [activeTab, setActiveTab] = useState(location.state?.tab || 'regular');
 
   useEffect(() => {
     if (location.state?.tab) setActiveTab(location.state.tab);
@@ -1031,16 +1037,23 @@ const Teoria = () => {
         <p>Consulta las reglas y listas esenciales del inglés</p>
       </div>
 
-      <div className="teoria-tabs">
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            className={`teoria-tab ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            <FontAwesomeIcon icon={tab.icon} />
-            <span>{tab.label}</span>
-          </button>
+      <div className="teoria-tabs-groups">
+        {Object.entries(levelMeta).map(([levelKey, meta]) => (
+          <div key={levelKey} className="teoria-tab-group" style={{ '--group-color': meta.color }}>
+            <span className="teoria-tab-group-label">{meta.emoji} {meta.label}</span>
+            <div className="teoria-tabs">
+              {tabs.filter(t => t.level === levelKey).map(tab => (
+                <button
+                  key={tab.id}
+                  className={`teoria-tab ${activeTab === tab.id ? 'active' : ''}`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  <FontAwesomeIcon icon={tab.icon} />
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
 

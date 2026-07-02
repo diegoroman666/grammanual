@@ -181,10 +181,14 @@
 }
 
 /* Responsive desktop vs mobile nav */
+/* The desktop nav (brand + 6 links + 2 icon buttons) needs ~900px of
+   room to lay out on one line without wrapping/overflowing — keep the
+   hamburger menu through the whole tablet range and only switch over
+   once there's genuinely enough width (measured live in the preview). */
 .desktop-nav { display: none; }
 .mobile-toggle { display: flex; }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .desktop-nav   { display: flex; }
   .mobile-toggle { display: none; }
 }

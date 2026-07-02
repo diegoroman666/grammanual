@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faHome, faBook, faInfoCircle, faMoon, faSun,
-  faBars, faTimes, faGraduationCap, faRoute, faBolt,
+  faHome, faInfoCircle, faMoon, faSun,
+  faBars, faTimes, faGraduationCap, faRoute, faToolbox, faListOl,
 } from '@fortawesome/free-solid-svg-icons';
 import './Layout.css';
 
 const NAV_LINKS = [
-  { path: '/',          icon: faHome,          label: 'Inicio'    },
-  { path: '/teoria',    icon: faGraduationCap, label: 'Teoría'    },
-  { path: '/ejercicios',icon: faBook,          label: 'Ejercicios'},
-  { path: '/ruta',      icon: faRoute,         label: 'Ruta'      },
-  { path: '/prueba',    icon: faBolt,          label: 'Pruebas'   },
-  { path: '/acerca',    icon: faInfoCircle,    label: 'Acerca'    },
+  { path: '/',              icon: faHome,          label: 'Inicio'        },
+  { path: '/como-aprender', icon: faListOl,        label: 'Cómo Aprender' },
+  { path: '/teoria',        icon: faGraduationCap, label: 'Teoría'        },
+  { path: '/herramientas',  icon: faToolbox,       label: 'Herramientas'  },
+  { path: '/ruta',          icon: faRoute,         label: 'Módulos'       },
+  { path: '/acerca',        icon: faInfoCircle,    label: 'Acerca'        },
 ];
 
 const Layout = ({ children, theme, toggleTheme }) => {
@@ -22,7 +22,12 @@ const Layout = ({ children, theme, toggleTheme }) => {
 
   useEffect(() => { setMobileMenuOpen(false); }, [location]);
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === '/ruta') {
+      return ['/ruta', '/prueba', '/practica-libre'].includes(location.pathname);
+    }
+    return location.pathname === path;
+  };
 
   return (
     <div className={`app-wrapper ${theme}`}>
@@ -46,12 +51,12 @@ const Layout = ({ children, theme, toggleTheme }) => {
             </Link>
 
             {/* Desktop nav */}
-            <ul className="desktop-nav items-center gap-1 list-none m-0 p-0">
+            <ul className="desktop-nav items-center gap-0.5 list-none m-0 p-0">
               {NAV_LINKS.map(({ path, icon, label }) => (
                 <li key={path}>
                   <Link
                     to={path}
-                    className={`nav-item flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium ${
+                    className={`nav-item flex items-center gap-1.5 px-2 py-2 rounded-lg text-sm font-medium whitespace-nowrap ${
                       isActive(path) ? 'nav-active' : 'nav-inactive'
                     }`}
                   >
