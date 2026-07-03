@@ -17,6 +17,9 @@ web_modules/
 dist/
 dist-ssr/
 
+# Compiled APKs (build artifacts — not for the repo)
+*.apk
+
 # Vite specific
 .vite/
 
