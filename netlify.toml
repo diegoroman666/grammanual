@@ -6,3 +6,19 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Security headers.
+# - style-src needs 'unsafe-inline' because React style={{...}} props render
+#   inline style attributes, and Layout.css @imports the Inter font from
+#   Google Fonts (fonts.googleapis.com / fonts.gstatic.com).
+# - connect-src allows api.mymemory.translated.net, the translation API used
+#   by Herramientas and Práctica Libre.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.mymemory.translated.net; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"

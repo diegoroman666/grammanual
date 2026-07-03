@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPencilAlt, faCheck, faRedo, faTimes, faToolbox,
@@ -89,7 +89,7 @@ const Herramientas = () => {
     const tenseLabel = TENSES.find(t => t.id === tense)?.label || tense;
     doc.setFontSize(18);
     doc.text(`Tabla del Tiempo ${tenseLabel}`, 14, 20);
-    doc.autoTable({
+    autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
       startY: 30,
