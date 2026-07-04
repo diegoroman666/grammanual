@@ -13,11 +13,15 @@
 #   Google Fonts (fonts.googleapis.com / fonts.gstatic.com).
 # - connect-src allows api.mymemory.translated.net, the translation API used
 #   by Herramientas and Práctica Libre.
+# - frame-ancestors permite que este sitio se muestre embebido en un iframe
+#   ÚNICAMENTE desde el portafolio (portafolio-diegoroman.netlify.app); cualquier
+#   otro origen sigue bloqueado (protección anti-clickjacking). Se quita
+#   X-Frame-Options porque solo admite DENY/SAMEORIGIN (no permite un origen
+#   cruzado específico) y su presencia anularía el permiso de frame-ancestors.
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.mymemory.translated.net; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
-    X-Frame-Options = "DENY"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.mymemory.translated.net; object-src 'none'; base-uri 'self'; frame-ancestors 'self' https://portafolio-diegoroman.netlify.app"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
