@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faHome, faInfoCircle, faMoon, faSun,
-  faBars, faTimes, faGraduationCap, faRoute, faToolbox, faListOl,
+  faBars, faTimes, faGraduationCap, faRoute, faToolbox, faListOl, faHeadphones,
 } from '@fortawesome/free-solid-svg-icons';
 import './Layout.css';
 
@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { path: '/teoria',        icon: faGraduationCap, label: 'Teoría'        },
   { path: '/herramientas',  icon: faToolbox,       label: 'Herramientas'  },
   { path: '/ruta',          icon: faRoute,         label: 'Módulos'       },
+  { path: '/test-audio',    icon: faHeadphones,    label: 'Test Audio'    },
   { path: '/acerca',        icon: faInfoCircle,    label: 'Acerca'        },
 ];
 
