@@ -8,6 +8,7 @@ import Herramientas from './components/Herramientas.jsx';
 import RutaAprendizaje from './components/RutaAprendizaje.jsx';
 import PruebaContrarreloj from './components/PruebaContrarreloj.jsx';
 import PracticaLibre from './components/PracticaLibre.jsx';
+import TestAudio from './components/TestAudio.jsx';
 import Layout from './components/Layout.jsx';
 
 // Import CSS
@@ -20,6 +21,7 @@ import './components/Teoria.css';
 import './components/Herramientas.css';
 import './components/RutaAprendizaje.css';
 import './components/PruebaContrarreloj.css';
+import './components/TestAudio.css';
 
 function App() {
   const [theme, setTheme] = useState('dark');
@@ -56,6 +58,7 @@ function App() {
           <Route path="/ruta" element={<RutaAprendizaje />} />
           <Route path="/prueba" element={<PruebaContrarreloj />} />
           <Route path="/practica-libre" element={<PracticaLibre />} />
+          <Route path="/test-audio" element={<TestAudio />} />
         </Routes>
       </Layout>
     </Router>
