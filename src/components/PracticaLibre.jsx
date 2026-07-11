@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBookOpen, faHeadphones, faVolumeUp, faLanguage,
-  faCheck, faTimes, faArrowRight, faRedo, faPause, faPlay,
+  faCheck, faTimes, faArrowRight, faArrowLeft, faRedo, faPause, faPlay,
 } from '@fortawesome/free-solid-svg-icons';
 import './PracticaLibre.css';
 
@@ -275,6 +275,18 @@ const PracticaLibre = () => {
     stopAudio();
   };
 
+  const handlePrev = () => {
+    const prevIndex = currentFilteredIndex - 1;
+    if (prevIndex < 0) return;
+    const prevExercise = filteredExercises[prevIndex];
+    const actualIndex = exerciseData.findIndex(e => e.id === prevExercise.id);
+    setCurrentExercise(actualIndex);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setTranslation('');
+    stopAudio();
+  };
+
   const handleRetry = () => {
     setSelectedAnswer(null);
     setShowResult(false);
@@ -480,6 +492,13 @@ const PracticaLibre = () => {
         )}
 
         <div className="exercise-actions">
+          <button
+            className="btn btn-secondary"
+            onClick={handlePrev}
+            disabled={currentFilteredIndex === 0}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} /> Anterior
+          </button>
           {showResult && (
             <button className="btn btn-primary" onClick={handleNext}>
               Siguiente <FontAwesomeIcon icon={faArrowRight} />

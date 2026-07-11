@@ -83,6 +83,85 @@
 }
 .ta-test-arrow { color: var(--accent-cyan); font-size: 1.1rem; }
 
+/* ── Selección de modo ── */
+.ta-mode-intro { text-align: center; margin: 1.25rem 0; }
+.ta-mode-intro h2 { color: var(--text-primary); margin: 0 0 0.4rem; font-size: 1.35rem; }
+.ta-mode-intro p { color: var(--text-secondary); margin: 0; }
+.ta-modes-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;
+}
+.ta-mode-card {
+  text-align: center; background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: 1.1rem; padding: 1.6rem 1.25rem; cursor: pointer; color: inherit;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+}
+.ta-mode-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px var(--shadow-color, rgba(0,0,0,0.25)); }
+.ta-mode-card.timed:hover { border-color: var(--accent-gold); }
+.ta-mode-card.free:hover  { border-color: var(--accent-cyan); }
+.ta-mode-icon { font-size: 2.2rem; margin-bottom: 0.3rem; }
+.ta-mode-card.timed .ta-mode-icon { color: var(--accent-gold); }
+.ta-mode-card.free .ta-mode-icon  { color: var(--accent-cyan); }
+.ta-mode-card h3 { margin: 0; color: var(--text-primary); font-size: 1.2rem; }
+.ta-mode-big { font-size: 1.6rem; font-weight: 800; color: var(--text-primary); }
+.ta-mode-big span { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); }
+.ta-mode-card p { color: var(--text-secondary); font-size: 0.88rem; margin: 0.4rem 0 0.6rem; line-height: 1.45; }
+.ta-mode-go { font-weight: 700; color: var(--accent-cyan); display: inline-flex; align-items: center; gap: 0.4rem; }
+.ta-mode-card.timed .ta-mode-go { color: var(--accent-gold); }
+.ta-mode-best {
+  font-weight: 700; color: var(--accent-gold); display: inline-flex; align-items: center; gap: 0.4rem;
+  background: rgba(240,180,41,0.12); padding: 0.3rem 0.7rem; border-radius: 1rem;
+}
+
+/* ── Cronómetro / temporizador en el ejercicio ── */
+.ta-timer-strip {
+  display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+  padding: 0.6rem 1rem; border-radius: 0.7rem; margin-bottom: 1rem; font-weight: 600;
+  border: 1px solid var(--border-color);
+}
+.ta-timer-strip.free { background: rgba(34,211,238,0.10); color: var(--text-primary); }
+.ta-timer-strip.free svg { color: var(--accent-cyan); }
+.ta-timer-strip.timed { background: rgba(240,180,41,0.12); color: var(--text-primary); }
+.ta-timer-strip.timed svg { color: var(--accent-gold); }
+.ta-timer-strip.timed.low { background: rgba(239,68,68,0.14); }
+.ta-timer-strip.timed.low svg,
+.ta-timer-strip.timed.low strong { color: #ef4444; }
+.ta-timer-note { font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); margin-left: auto; }
+.ta-timer-bar { flex: 1 1 120px; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; min-width: 100px; }
+.ta-timer-bar > div { height: 100%; background: var(--accent-gold); transition: width 1s linear; }
+.ta-timer-strip.timed.low .ta-timer-bar > div { background: #ef4444; }
+.ta-question.active { box-shadow: 0 0 0 2px rgba(240,180,41,0.35); }
+
+/* ── Revisión teórica (resultados) ── */
+.ta-review {
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: 1rem; padding: 1.1rem 1.3rem; margin-top: 1.25rem;
+}
+.ta-review h3 { margin: 0 0 0.6rem; color: var(--accent-gold); display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; }
+.ta-review-intro { color: var(--text-secondary); margin: 0 0 0.8rem; font-size: 0.9rem; }
+.ta-review-perfect { color: #22c55e; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; margin: 0; }
+.ta-review-list { display: flex; flex-direction: column; gap: 0.55rem; }
+.ta-review-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  background: var(--bg-secondary, rgba(127,127,127,0.08)); border: 1px solid var(--border-color);
+  border-radius: 0.7rem; padding: 0.7rem 0.9rem; cursor: pointer; text-align: left; color: inherit;
+  transition: border-color 0.15s ease;
+}
+.ta-review-item:hover { border-color: var(--accent-cyan); }
+.ta-review-item > div { display: flex; flex-direction: column; }
+.ta-review-concept { font-weight: 700; color: var(--text-primary); font-size: 0.92rem; }
+.ta-review-target { font-size: 0.8rem; color: var(--accent-cyan); }
+.ta-review-item svg { color: var(--accent-cyan); flex-shrink: 0; }
+
+/* ── Tiempo en resultados ── */
+.ta-result-time {
+  display: inline-flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center;
+  color: var(--text-secondary); font-weight: 600; margin: 0.25rem auto 0.5rem;
+}
+.ta-result-time strong { color: var(--text-primary); }
+.ta-record { color: var(--accent-gold); font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem; }
+.ta-best-ref { color: var(--text-secondary); font-weight: 500; }
+
 /* ── Barra superior del ejercicio ── */
 .ta-exercise-top {
   display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
@@ -233,6 +312,7 @@
 
 /* ── Navegación ── */
 .ta-nav { display: flex; justify-content: space-between; gap: 0.75rem; margin-top: 1.5rem; }
+.ta-nav.single { justify-content: flex-end; }
 .ta-nav-hint { text-align: center; color: var(--text-secondary); font-size: 0.82rem; margin: 0.5rem 0 0; }
 .ta-btn {
   border: none; padding: 0.7rem 1.3rem; border-radius: 0.7rem; font-weight: 700; cursor: pointer;

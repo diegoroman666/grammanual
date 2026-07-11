@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faHeadphones, faVolumeUp, faStop, faCheck, faTimes,
   faArrowRight, faArrowLeft, faRedo, faLock, faTrophy,
   faLanguage, faEye, faFileAlt, faPlay, faLightbulb,
+  faStopwatch, faHourglassHalf, faBookOpen, faClock,
 } from '@fortawesome/free-solid-svg-icons';
 import { tests, TOTAL_QUESTIONS } from '../data/testAudioData';
 import { translateText } from '../services/translateApi';
 import './TestAudio.css';
 
-const MAX_PLAYS = 2; // El audio se puede escuchar como máximo 2 veces
+const MAX_PLAYS = 2;       // El audio se puede escuchar como máximo 2 veces
+const TIME_PER_Q = 30;     // Segundos por pregunta en el modo cronometrado
 
 // ─── Selección de voz ─────────────────────────────────────────────────────────
-// Intenta encontrar una voz real del dispositivo que coincida con la variante y
-// el género del ejercicio. Si no la encuentra, rota entre las voces inglesas
-// disponibles para que cada ejercicio suene distinto.
 const FEMALE_HINTS = ['female', 'samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona', 'zira', 'susan', 'catherine'];
 const MALE_HINTS   = ['male', 'daniel', 'alex', 'fred', 'thomas', 'oliver', 'david', 'george', 'james', 'lee'];
 
@@ -22,37 +22,62 @@ function pickVoice(voices, exercise, rotationIndex) {
   if (!voices || voices.length === 0) return null;
   const english = voices.filter(v => /^en(-|_)?/i.test(v.lang));
   const pool = english.length ? english : voices;
-
-  // 1) coincidencia por variante (en-US/en-GB/en-AU) + género
   const wantLang = (exercise.voiceKind || 'en-US').toLowerCase().replace('_', '-');
   const genderHints = exercise.gender === 'male' ? MALE_HINTS : FEMALE_HINTS;
-
   const byLang = pool.filter(v => v.lang.toLowerCase().replace('_', '-').startsWith(wantLang));
   const langPool = byLang.length ? byLang : pool;
-
   const byGender = langPool.find(v => genderHints.some(h => v.name.toLowerCase().includes(h)));
   if (byGender) return byGender;
   if (byLang.length) return byLang[rotationIndex % byLang.length];
-
-  // 2) fallback: rotar entre todas para dar variedad
   return pool[rotationIndex % pool.length];
 }
 
+// ─── Concepto → contenido teórico (pestaña de la sección Teoría) ────────────────
+function conceptTheory(concept) {
+  const c = (concept || '').toLowerCase();
+  if (c.includes('frecuencia')) return { tab: 'adverbs', label: 'Adverbios de frecuencia' };
+  if (c.includes('lugar'))      return { tab: 'place',   label: 'Complemento de lugar' };
+  if (c.includes('la hora') || c.includes('rango de horas'))
+    return { tab: 'time', label: 'Complemento de tiempo (la hora)' };
+  if (c.includes('preposición de tiempo') || c.includes('preposiciones de tiempo') || c.includes('expresiones de tiempo') || c.includes('expresión de tiempo'))
+    return { tab: 'time', label: 'Complemento de tiempo' };
+  if (c.includes('preposicion') || c.includes('preposición'))
+    return { tab: 'prepositions', label: 'Preposiciones' };
+  if (c.includes('like to') || c.includes('gusto') || c.includes('verbo') || c.includes('tiempos verbales'))
+    return { tab: 'irregular', label: 'Verbos' };
+  if (c.includes('w question')) return { tab: 'wquestions', label: 'W Questions' };
+  return { tab: null, label: 'Teoría general' };
+}
+
+const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+const bestKey = (id) => `ta-best-${id}`;
+
 const TestAudio = () => {
+  const navigate = useNavigate();
+
   const [selectedTest, setSelectedTest] = useState(null);
+  const [mode, setMode] = useState(null);          // null | 'timed' | 'free'
   const [exerciseIndex, setExerciseIndex] = useState(0);
-  const [answers, setAnswers] = useState({});      // key: `${exId}-${qi}` -> option elegida
-  const [plays, setPlays] = useState(0);           // reproducciones del ejercicio actual
-  const [audioStatus, setAudioStatus] = useState('idle'); // idle | playing
+  const [answers, setAnswers] = useState({});      // key `${exId}-${qi}` -> option ('__timeout__' si se agotó el tiempo)
+  const [plays, setPlays] = useState(0);
+  const [audioStatus, setAudioStatus] = useState('idle');
   const [showTranscript, setShowTranscript] = useState(false);
   const [translation, setTranslation] = useState('');
   const [translating, setTranslating] = useState(false);
   const [finished, setFinished] = useState(false);
   const [voices, setVoices] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(TIME_PER_Q);
+  const [elapsed, setElapsed] = useState(0);
 
   const rotationRef = useRef(0);
 
-  // Cargar voces del navegador (pueden llegar de forma asíncrona)
+  const exercise = selectedTest ? selectedTest.exercises[exerciseIndex] : null;
+  // Primera pregunta sin responder del ejercicio actual (objetivo del cronómetro)
+  const targetQi = exercise
+    ? exercise.questions.findIndex((_, qi) => !answers[`${exercise.id}-${qi}`])
+    : -1;
+
+  // Cargar voces del navegador
   useEffect(() => {
     if (!('speechSynthesis' in window)) return;
     const load = () => setVoices(window.speechSynthesis.getVoices());
@@ -69,9 +94,30 @@ const TestAudio = () => {
     setAudioStatus('idle');
   }, []);
 
-  const exercise = selectedTest ? selectedTest.exercises[exerciseIndex] : null;
+  // Cronómetro ascendente (modo tiempo libre)
+  useEffect(() => {
+    if (mode !== 'free' || !selectedTest || finished) return;
+    const id = setInterval(() => setElapsed(e => e + 1), 1000);
+    return () => clearInterval(id);
+  }, [mode, selectedTest, finished]);
 
-  // Reinicia el estado por-ejercicio
+  // Reinicia el contador de 30 s cada vez que cambia la pregunta objetivo
+  useEffect(() => {
+    if (mode === 'timed' && exercise && targetQi !== -1) setTimeLeft(TIME_PER_Q);
+  }, [mode, exercise?.id, targetQi]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Cuenta regresiva de 30 s por pregunta
+  useEffect(() => {
+    if (mode !== 'timed' || !exercise || targetQi === -1 || finished) return;
+    if (timeLeft <= 0) {
+      const key = `${exercise.id}-${targetQi}`;
+      setAnswers(prev => (prev[key] ? prev : { ...prev, [key]: '__timeout__' }));
+      return;
+    }
+    const id = setTimeout(() => setTimeLeft(t => t - 1), 1000);
+    return () => clearTimeout(id);
+  }, [mode, exercise, targetQi, timeLeft, finished]);
+
   const resetExerciseState = useCallback(() => {
     setPlays(0);
     setShowTranscript(false);
@@ -79,17 +125,32 @@ const TestAudio = () => {
     stopAudio();
   }, [stopAudio]);
 
-  const startTest = (test) => {
+  const openTest = (test) => {
     setSelectedTest(test);
+    setMode(null);
     setExerciseIndex(0);
     setAnswers({});
     setFinished(false);
+    setElapsed(0);
+    setTimeLeft(TIME_PER_Q);
+    resetExerciseState();
+  };
+
+  const startWithMode = (m) => {
+    setMode(m);
+    setExerciseIndex(0);
+    setAnswers({});
+    setFinished(false);
+    setElapsed(0);
+    setTimeLeft(TIME_PER_Q);
+    rotationRef.current = 0;
     resetExerciseState();
   };
 
   const backToList = () => {
     stopAudio();
     setSelectedTest(null);
+    setMode(null);
     setFinished(false);
   };
 
@@ -100,7 +161,6 @@ const TestAudio = () => {
     }
     if (plays >= MAX_PLAYS) return;
     window.speechSynthesis.cancel();
-
     const utter = new SpeechSynthesisUtterance(exercise.audioText);
     const voice = pickVoice(voices, exercise, rotationRef.current + exerciseIndex);
     if (voice) { utter.voice = voice; utter.lang = voice.lang; }
@@ -109,7 +169,6 @@ const TestAudio = () => {
     utter.rate = exercise.rate ?? 0.9;
     utter.onend = () => setAudioStatus('idle');
     utter.onerror = () => setAudioStatus('idle');
-
     window.speechSynthesis.speak(utter);
     setAudioStatus('playing');
     setPlays(p => p + 1);
@@ -117,14 +176,11 @@ const TestAudio = () => {
 
   const handleAnswer = (qi, option) => {
     const key = `${exercise.id}-${qi}`;
-    if (answers[key]) return; // ya respondida, no se puede cambiar (es un examen)
+    if (answers[key]) return; // no se puede cambiar una respuesta (es examen)
     setAnswers(prev => ({ ...prev, [key]: option }));
   };
 
-  // ¿Se respondieron las 5 preguntas del ejercicio actual?
-  const allAnswered = exercise
-    ? exercise.questions.every((_, qi) => answers[`${exercise.id}-${qi}`])
-    : false;
+  const allAnswered = exercise ? targetQi === -1 : false;
 
   const doTranslate = async () => {
     if (translation || translating) return;
@@ -134,25 +190,26 @@ const TestAudio = () => {
     setTranslating(false);
   };
 
+  const finishTest = useCallback(() => {
+    stopAudio();
+    if (mode === 'free') {
+      const prev = Number(localStorage.getItem(bestKey(selectedTest.id))) || 0;
+      if (!prev || elapsed < prev) localStorage.setItem(bestKey(selectedTest.id), String(elapsed));
+    }
+    setFinished(true);
+  }, [mode, elapsed, selectedTest, stopAudio]);
+
   const nextExercise = () => {
     if (exerciseIndex + 1 < selectedTest.exercises.length) {
       setExerciseIndex(i => i + 1);
       rotationRef.current += 1;
+      setTimeLeft(TIME_PER_Q);
       resetExerciseState();
     } else {
-      stopAudio();
-      setFinished(true);
+      finishTest();
     }
   };
 
-  const prevExercise = () => {
-    if (exerciseIndex > 0) {
-      setExerciseIndex(i => i - 1);
-      resetExerciseState();
-    }
-  };
-
-  // ── Puntaje ──
   const scoreFor = (test) => {
     let correct = 0, total = 0;
     test.exercises.forEach(ex => ex.questions.forEach((q, qi) => {
@@ -160,6 +217,11 @@ const TestAudio = () => {
       if (answers[`${ex.id}-${qi}`] === q.answer) correct += 1;
     }));
     return { correct, total };
+  };
+
+  const goTheory = (tab) => {
+    stopAudio();
+    navigate('/teoria', tab ? { state: { tab } } : undefined);
   };
 
   // ════════════════════════════════════════════════════════════════════════
@@ -186,16 +248,17 @@ const TestAudio = () => {
           <ul>
             <li>Cada prueba tiene <strong>10 ejercicios de audio</strong> con <strong>5 preguntas</strong> cada uno.</li>
             <li>El audio se puede escuchar como <strong>máximo {MAX_PLAYS} veces</strong>: escucha con atención.</li>
+            <li>Antes de empezar eliges modo: <strong>30 s por pregunta</strong> o <strong>tiempo libre con cronómetro</strong>.</li>
             <li>Cada ejercicio usa una <strong>voz distinta</strong> (acentos y tonos variados).</li>
-            <li>Las alternativas están en <strong>inglés</strong> e incluyen palabras <strong>mal escritas a propósito</strong>: identifica la forma correcta.</li>
-            <li>No verás el <strong>texto en inglés ni la traducción</strong> hasta responder las 5 preguntas.</li>
-            <li>Al responder verás una <strong>explicación teórica</strong> (adverbios de frecuencia, complementos de lugar, la hora, etc.).</li>
+            <li>Las alternativas están en <strong>inglés</strong> e incluyen palabras <strong>mal escritas a propósito</strong>.</li>
+            <li>No verás el <strong>texto ni la traducción</strong> hasta responder las 5 preguntas, y <strong>no se puede retroceder</strong> a un audio anterior.</li>
+            <li>Al terminar, cada tema te enlaza al <strong>contenido teórico</strong> para saber más.</li>
           </ul>
         </div>
 
         <div className="ta-tests-grid">
           {tests.map(test => (
-            <button key={test.id} className="ta-test-card" onClick={() => startTest(test)}>
+            <button key={test.id} className="ta-test-card" onClick={() => openTest(test)}>
               <div className="ta-test-emoji">{test.emoji}</div>
               <div className="ta-test-body">
                 <span className="ta-test-level">{test.level}</span>
@@ -215,12 +278,69 @@ const TestAudio = () => {
   }
 
   // ════════════════════════════════════════════════════════════════════════
-  // VISTA 3 · Resultados de la prueba
+  // VISTA 2 · Selección de modo (antes de comenzar)
+  // ════════════════════════════════════════════════════════════════════════
+  if (!mode) {
+    const best = Number(localStorage.getItem(bestKey(selectedTest.id))) || 0;
+    return (
+      <div className="ta-container">
+        <div className="ta-exercise-top">
+          <button className="ta-back" onClick={backToList}>
+            <FontAwesomeIcon icon={faArrowLeft} /> Volver
+          </button>
+          <span className="ta-test-tag">{selectedTest.emoji} {selectedTest.title}</span>
+          <span />
+        </div>
+
+        <div className="ta-mode-intro">
+          <h2>Elige cómo quieres rendir la prueba</h2>
+          <p>Ambos modos tienen los mismos 10 audios y 50 preguntas. Elige antes de comenzar.</p>
+        </div>
+
+        <div className="ta-modes-grid">
+          <button className="ta-mode-card timed" onClick={() => startWithMode('timed')}>
+            <FontAwesomeIcon icon={faHourglassHalf} className="ta-mode-icon" />
+            <h3>Contra el tiempo</h3>
+            <div className="ta-mode-big">30 s <span>por pregunta</span></div>
+            <p>Dispones de 30 segundos para cada pregunta. Si se agota el tiempo, la pregunta se marca como incorrecta. Ideal para ganar velocidad y reflejos.</p>
+            <span className="ta-mode-go">Empezar <FontAwesomeIcon icon={faArrowRight} /></span>
+          </button>
+
+          <button className="ta-mode-card free" onClick={() => startWithMode('free')}>
+            <FontAwesomeIcon icon={faStopwatch} className="ta-mode-icon" />
+            <h3>Tiempo libre</h3>
+            <div className="ta-mode-big">Cronómetro</div>
+            <p>Sin límite por pregunta: un cronómetro mide tu tiempo total. La idea es que en cada intento lo repitas en <strong>menos tiempo</strong> y desarrolles tu habilidad.</p>
+            {best > 0
+              ? <span className="ta-mode-best"><FontAwesomeIcon icon={faTrophy} /> Tu mejor tiempo: {fmt(best)}</span>
+              : <span className="ta-mode-go">Empezar <FontAwesomeIcon icon={faArrowRight} /></span>}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // VISTA 4 · Resultados
   // ════════════════════════════════════════════════════════════════════════
   if (finished) {
     const { correct, total } = scoreFor(selectedTest);
     const pct = Math.round((correct / total) * 100);
     const passed = pct >= 60;
+
+    // Temas fallados (únicos) con su enlace teórico
+    const wrongConcepts = [];
+    const seen = new Set();
+    selectedTest.exercises.forEach(ex => ex.questions.forEach((q, qi) => {
+      if (answers[`${ex.id}-${qi}`] !== q.answer && !seen.has(q.concept)) {
+        seen.add(q.concept);
+        wrongConcepts.push(q.concept);
+      }
+    }));
+
+    const best = mode === 'free' ? (Number(localStorage.getItem(bestKey(selectedTest.id))) || 0) : 0;
+    const isRecord = mode === 'free' && best > 0 && elapsed <= best;
+
     return (
       <div className="ta-container">
         <div className={`ta-result-card ${passed ? 'pass' : 'fail'}`}>
@@ -229,32 +349,75 @@ const TestAudio = () => {
           <div className="ta-result-score">{correct}<span>/{total}</span></div>
           <div className="ta-result-pct">{pct}% de aciertos</div>
           <div className="ta-result-bar"><div style={{ width: `${pct}%` }} /></div>
+
+          {mode === 'free' && (
+            <div className="ta-result-time">
+              <FontAwesomeIcon icon={faStopwatch} /> Tiempo total: <strong>{fmt(elapsed)}</strong>
+              {isRecord
+                ? <span className="ta-record"><FontAwesomeIcon icon={faTrophy} /> ¡Nuevo récord!</span>
+                : best > 0 && <span className="ta-best-ref">Mejor: {fmt(best)}</span>}
+            </div>
+          )}
+          {mode === 'timed' && (
+            <div className="ta-result-time">
+              <FontAwesomeIcon icon={faHourglassHalf} /> Modo contra el tiempo (30 s por pregunta)
+            </div>
+          )}
+
           <p className="ta-result-msg">
             {passed
-              ? 'Buen oído. Revisa las explicaciones de los ejercicios para afinar los detalles.'
-              : 'Vuelve a escuchar los audios y presta atención a los adverbios de frecuencia y complementos de lugar.'}
+              ? 'Buen oído. Repite en menos tiempo o en modo contra reloj para afinar tus reflejos.'
+              : 'Vuelve a intentarlo. Revisa abajo los temas donde fallaste antes de repetir.'}
           </p>
-          <div className="ta-result-actions">
-            <button className="ta-btn ta-btn-primary" onClick={() => startTest(selectedTest)}>
-              <FontAwesomeIcon icon={faRedo} /> Repetir prueba
-            </button>
-            <button className="ta-btn ta-btn-secondary" onClick={backToList}>
-              <FontAwesomeIcon icon={faArrowLeft} /> Otras pruebas
-            </button>
-          </div>
+        </div>
+
+        {/* Recomendaciones teóricas */}
+        <div className="ta-review">
+          <h3><FontAwesomeIcon icon={faBookOpen} /> Para saber más sobre lo que fallaste</h3>
+          {wrongConcepts.length === 0 ? (
+            <p className="ta-review-perfect"><FontAwesomeIcon icon={faCheck} /> ¡Sin errores! Dominaste todos los temas de esta prueba.</p>
+          ) : (
+            <>
+              <p className="ta-review-intro">Toca cada tema para ir directo al contenido teórico correspondiente:</p>
+              <div className="ta-review-list">
+                {wrongConcepts.map((concept, i) => {
+                  const th = conceptTheory(concept);
+                  return (
+                    <button key={i} className="ta-review-item" onClick={() => goTheory(th.tab)}>
+                      <div>
+                        <span className="ta-review-concept">{concept}</span>
+                        <span className="ta-review-target">Ver: {th.label}</span>
+                      </div>
+                      <FontAwesomeIcon icon={faArrowRight} />
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="ta-result-actions">
+          <button className="ta-btn ta-btn-primary" onClick={() => openTest(selectedTest)}>
+            <FontAwesomeIcon icon={faRedo} /> Repetir prueba
+          </button>
+          <button className="ta-btn ta-btn-secondary" onClick={backToList}>
+            <FontAwesomeIcon icon={faArrowLeft} /> Otras pruebas
+          </button>
         </div>
       </div>
     );
   }
 
   // ════════════════════════════════════════════════════════════════════════
-  // VISTA 2 · Ejercicio de audio
+  // VISTA 3 · Ejercicio de audio
   // ════════════════════════════════════════════════════════════════════════
   const playsLeft = MAX_PLAYS - plays;
+  const timerPct = (timeLeft / TIME_PER_Q) * 100;
+  const timerLow = timeLeft <= 10;
 
   return (
     <div className="ta-container">
-      {/* Barra superior */}
       <div className="ta-exercise-top">
         <button className="ta-back" onClick={backToList}>
           <FontAwesomeIcon icon={faArrowLeft} /> Salir
@@ -264,8 +427,23 @@ const TestAudio = () => {
       </div>
 
       <div className="ta-progress-bar">
-        <div style={{ width: `${((exerciseIndex) / selectedTest.exercises.length) * 100}%` }} />
+        <div style={{ width: `${(exerciseIndex / selectedTest.exercises.length) * 100}%` }} />
       </div>
+
+      {/* Estado de modo / cronómetro */}
+      {mode === 'free' && (
+        <div className="ta-timer-strip free">
+          <FontAwesomeIcon icon={faStopwatch} /> Tiempo: <strong>{fmt(elapsed)}</strong>
+          <span className="ta-timer-note">Modo tiempo libre — intenta bajar tu marca</span>
+        </div>
+      )}
+      {mode === 'timed' && targetQi !== -1 && (
+        <div className={`ta-timer-strip timed ${timerLow ? 'low' : ''}`}>
+          <FontAwesomeIcon icon={faClock} />
+          <span>Pregunta {targetQi + 1}: <strong>{timeLeft}s</strong></span>
+          <div className="ta-timer-bar"><div style={{ width: `${timerPct}%` }} /></div>
+        </div>
+      )}
 
       {/* Reproductor */}
       <div className="ta-player-card">
@@ -298,9 +476,10 @@ const TestAudio = () => {
           const key = `${exercise.id}-${qi}`;
           const chosen = answers[key];
           const answered = Boolean(chosen);
+          const timedOut = chosen === '__timeout__';
           const isCorrect = chosen === q.answer;
           return (
-            <div key={key} className={`ta-question ${answered ? (isCorrect ? 'ok' : 'ko') : ''}`}>
+            <div key={key} className={`ta-question ${answered ? (isCorrect ? 'ok' : 'ko') : ''} ${mode === 'timed' && qi === targetQi ? 'active' : ''}`}>
               <div className="ta-q-head">
                 <span className="ta-q-num">{qi + 1}</span>
                 <h3>{q.q}</h3>
@@ -331,7 +510,7 @@ const TestAudio = () => {
                 <div className={`ta-explain ${isCorrect ? 'ok' : 'ko'}`}>
                   <div className="ta-explain-head">
                     <FontAwesomeIcon icon={isCorrect ? faCheck : faTimes} />
-                    {isCorrect ? '¡Correcto!' : 'Incorrecto'}
+                    {isCorrect ? '¡Correcto!' : (timedOut ? 'Se acabó el tiempo' : 'Incorrecto')}
                     <span className="ta-concept">{q.concept}</span>
                   </div>
                   {!isCorrect && (
@@ -374,11 +553,8 @@ const TestAudio = () => {
         )}
       </div>
 
-      {/* Navegación entre ejercicios */}
-      <div className="ta-nav">
-        <button className="ta-btn ta-btn-secondary" onClick={prevExercise} disabled={exerciseIndex === 0}>
-          <FontAwesomeIcon icon={faArrowLeft} /> Anterior
-        </button>
+      {/* Navegación: solo avanzar (no se puede retroceder) */}
+      <div className="ta-nav single">
         <button className="ta-btn ta-btn-primary" onClick={nextExercise} disabled={!allAnswered}>
           {exerciseIndex + 1 < selectedTest.exercises.length
             ? <>Siguiente audio <FontAwesomeIcon icon={faArrowRight} /></>
@@ -386,7 +562,7 @@ const TestAudio = () => {
         </button>
       </div>
       {!allAnswered && (
-        <p className="ta-nav-hint">Debes responder las 5 preguntas para continuar.</p>
+        <p className="ta-nav-hint">Debes responder las 5 preguntas para continuar. No es posible volver a un audio anterior.</p>
       )}
     </div>
   );
