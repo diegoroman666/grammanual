@@ -52,6 +52,22 @@ function conceptTheory(concept) {
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 const bestKey = (id) => `ta-best-${id}`;
 
+// ─── Distribución de la respuesta correcta ──────────────────────────────────────
+// En los datos la respuesta correcta se lista primera (posición A) por comodidad.
+// Aquí rotamos las opciones de forma DETERMINISTA (misma pregunta → siempre la
+// misma posición, pero repartida entre A/B/C/D) para que la correcta no sea
+// siempre la "A".
+function hashStr(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+  return h;
+}
+function rotateOptions(options, exId, qi) {
+  const n = options.length;
+  const k = (hashStr(exId) + qi) % n; // la correcta (índice 0) termina en la posición k
+  return options.map((_, i) => options[(i - k + n) % n]);
+}
+
 const TestAudio = () => {
   const navigate = useNavigate();
 
@@ -486,7 +502,7 @@ const TestAudio = () => {
               </div>
 
               <div className="ta-options">
-                {q.options.map((opt, oi) => {
+                {rotateOptions(q.options, exercise.id, qi).map((opt, oi) => {
                   const selected = chosen === opt;
                   const correctOpt = answered && opt === q.answer;
                   const wrongPick = answered && selected && opt !== q.answer;
