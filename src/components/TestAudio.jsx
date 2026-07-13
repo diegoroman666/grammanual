@@ -5,7 +5,7 @@ import {
   faHeadphones, faVolumeUp, faStop, faCheck, faTimes,
   faArrowRight, faArrowLeft, faRedo, faLock, faTrophy,
   faLanguage, faEye, faFileAlt, faPlay, faLightbulb,
-  faStopwatch, faHourglassHalf, faBookOpen, faClock,
+  faStopwatch, faHourglassHalf, faBookOpen, faClock, faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 import { tests, TOTAL_QUESTIONS } from '../data/testAudioData';
 import { translateText } from '../services/translateApi';
@@ -51,6 +51,28 @@ function conceptTheory(concept) {
 
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 const bestKey = (id) => `ta-best-${id}`;
+
+// Trocea un texto en oraciones (para encolar utterances cortas y fiables).
+// Si alguna oración fuese muy larga, la parte además por comas.
+function splitSentences(text) {
+  const sentences = (text.match(/[^.!?]+[.!?]*/g) || [text])
+    .map(s => s.trim())
+    .filter(Boolean);
+  const out = [];
+  sentences.forEach(s => {
+    if (s.length <= 160) { out.push(s); return; }
+    // oración larga: partir por comas manteniendo trozos manejables
+    let buf = '';
+    s.split(',').forEach(part => {
+      const piece = part.trim();
+      if (!piece) return;
+      if ((buf + ' ' + piece).trim().length > 160 && buf) { out.push(buf.trim()); buf = piece; }
+      else buf = (buf ? buf + ', ' : '') + piece;
+    });
+    if (buf.trim()) out.push(buf.trim());
+  });
+  return out.length ? out : [text];
+}
 
 // ─── Barajado aleatorio de las opciones ─────────────────────────────────────────
 // En los datos la respuesta correcta se lista primera (posición A) por comodidad.
@@ -138,11 +160,12 @@ const TestAudio = () => {
     if (mode === 'timed' && exercise) setTimeLeft(TIME_PER_EX);
   }, [mode, exercise?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Cuenta regresiva de 6 minutos por ejercicio (5 preguntas)
+  // Contrarreloj: el tiempo SIGUE CORRIENDO. Cada ejercicio dura 6 min; al
+  // agotarse, se avanza automáticamente al siguiente (reloj global de 1 hora).
   useEffect(() => {
-    if (mode !== 'timed' || !exercise || finished || targetQi === -1) return; // todas respondidas → detener
+    if (mode !== 'timed' || !exercise || finished) return;
     if (timeLeft <= 0) {
-      // Se acabó el tiempo del ejercicio: marca como incorrectas las preguntas sin responder
+      // Marca como incorrectas las preguntas sin responder de este ejercicio…
       setAnswers(prev => {
         const next = { ...prev };
         exercise.questions.forEach((_, qi) => {
@@ -151,11 +174,24 @@ const TestAudio = () => {
         });
         return next;
       });
+      // …y avanza automáticamente (o finaliza si era el último).
+      if (exerciseIndex + 1 < selectedTest.exercises.length) {
+        setExerciseIndex(i => i + 1);
+        rotationRef.current += 1;
+        setTimeLeft(TIME_PER_EX);
+        setPlays(0);
+        setShowTranscript(false);
+        setTranslation('');
+        stopAudio();
+      } else {
+        stopAudio();
+        setFinished(true);
+      }
       return;
     }
     const id = setTimeout(() => setTimeLeft(t => t - 1), 1000);
     return () => clearTimeout(id);
-  }, [mode, exercise, targetQi, timeLeft, finished]);
+  }, [mode, exercise, timeLeft, finished, exerciseIndex, selectedTest, stopAudio]);
 
   const resetExerciseState = useCallback(() => {
     setPlays(0);
@@ -201,40 +237,49 @@ const TestAudio = () => {
     }
     if (plays >= MAX_PLAYS) return;
 
-    // Limpia cualquier reproducción o keep-alive previo
+    // Limpia cualquier reproducción o keep-alive previo.
     if (keepAliveRef.current) { clearInterval(keepAliveRef.current); keepAliveRef.current = null; }
     synth.cancel();
 
-    // Asegura que las voces estén cargadas (en algunos navegadores llegan tarde)
+    // Voces: en móviles pueden llegar tarde; usa las disponibles ahora mismo.
     const available = synth.getVoices();
     if (available && available.length && voices.length === 0) setVoices(available);
     const voicePool = available && available.length ? available : voices;
-
-    const utter = new SpeechSynthesisUtterance(exercise.audioText);
     const voice = pickVoice(voicePool, exercise, rotationRef.current + exerciseIndex);
-    if (voice) { utter.voice = voice; utter.lang = voice.lang; }
-    else utter.lang = 'en-US';
-    utter.pitch = exercise.pitch ?? 1;
-    utter.rate = exercise.rate ?? 0.9;
-    utter.volume = 1;
 
-    const cleanup = () => {
-      if (keepAliveRef.current) { clearInterval(keepAliveRef.current); keepAliveRef.current = null; }
-      setAudioStatus('idle');
+    // Se trocea el texto en oraciones y se encolan varias utterances cortas.
+    // Esto evita el bug de Chrome/Android que corta los audios largos (~>15 s)
+    // y es mucho más fiable en celular que un único enunciado largo.
+    const chunks = splitSentences(exercise.audioText);
+    let remaining = chunks.length;
+    const onChunkDone = () => {
+      remaining -= 1;
+      if (remaining <= 0) {
+        if (keepAliveRef.current) { clearInterval(keepAliveRef.current); keepAliveRef.current = null; }
+        setAudioStatus('idle');
+      }
     };
-    utter.onend = cleanup;
-    utter.onerror = cleanup;
 
-    // Workaround del bug de Chrome que corta los audios largos (~>15 s):
-    // se le da un "empujón" con pause/resume mientras siga hablando.
+    // IMPORTANTE: speak() se llama de forma SÍNCRONA dentro del gesto del clic
+    // (requisito de iOS/Safari). Nada de setTimeout antes de hablar.
+    chunks.forEach(chunk => {
+      const u = new SpeechSynthesisUtterance(chunk);
+      if (voice) { u.voice = voice; u.lang = voice.lang; } else u.lang = 'en-US';
+      u.pitch = exercise.pitch ?? 1;
+      u.rate = exercise.rate ?? 0.9;
+      u.volume = 1;
+      u.onend = onChunkDone;
+      u.onerror = onChunkDone;
+      synth.speak(u);
+    });
+
+    // Empujón suave para motores que se detienen entre enunciados (Chrome desktop).
+    // resume() sin pause() no provoca cortes audibles.
     keepAliveRef.current = setInterval(() => {
-      if (!synth.speaking) { clearInterval(keepAliveRef.current); keepAliveRef.current = null; return; }
-      synth.pause();
+      if (!synth.speaking && !synth.pending) { clearInterval(keepAliveRef.current); keepAliveRef.current = null; return; }
       synth.resume();
-    }, 9000);
+    }, 5000);
 
-    // Pequeño respiro tras cancel() para que speak() no se ignore en algunos navegadores
-    setTimeout(() => { synth.speak(utter); }, 60);
     setAudioStatus('playing');
     setPlays(p => p + 1);
   };
@@ -367,7 +412,7 @@ const TestAudio = () => {
             <FontAwesomeIcon icon={faHourglassHalf} className="ta-mode-icon" />
             <h3>Contra el tiempo</h3>
             <div className="ta-mode-big">6 min <span>por ejercicio</span></div>
-            <p>Tienes 6 minutos para las 5 preguntas de cada audio (1 hora por prueba como tope). Si se acaba el tiempo del ejercicio, las preguntas sin responder se marcan incorrectas. Resuélvelo en una hora o menos.</p>
+            <p>El reloj no se detiene: 6 minutos por audio y <strong>1 hora por prueba</strong>. Si se cumplen los 6 min, avanza solo al siguiente audio (lo sin responder queda incorrecto) y te avisa en el último minuto. Puedes terminar en menos de una hora.</p>
             <span className="ta-mode-go">Empezar <FontAwesomeIcon icon={faArrowRight} /></span>
           </button>
 
@@ -479,7 +524,8 @@ const TestAudio = () => {
   // ════════════════════════════════════════════════════════════════════════
   const playsLeft = MAX_PLAYS - plays;
   const timerPct = (timeLeft / TIME_PER_EX) * 100;
-  const timerLow = timeLeft <= 60;
+  const timerLow = timeLeft <= 60; // último minuto del ejercicio
+  const globalRemaining = (selectedTest.exercises.length - exerciseIndex - 1) * TIME_PER_EX + timeLeft;
 
   return (
     <div className="ta-container">
@@ -504,10 +550,14 @@ const TestAudio = () => {
       )}
       {mode === 'timed' && (
         <div className={`ta-timer-strip timed ${timerLow ? 'low' : ''}`}>
-          <FontAwesomeIcon icon={faClock} />
-          <span>Tiempo del ejercicio: <strong>{fmt(timeLeft)}</strong></span>
+          <FontAwesomeIcon icon={timerLow ? faExclamationTriangle : faClock} />
+          <span>Ejercicio {exerciseIndex + 1}: <strong>{fmt(timeLeft)}</strong></span>
           <div className="ta-timer-bar"><div style={{ width: `${timerPct}%` }} /></div>
-          <span className="ta-timer-note">6 min por audio · 1 h por prueba</span>
+          <span className="ta-timer-note">
+            {timerLow
+              ? '¡Último minuto! Al acabar pasa al siguiente audio'
+              : `Total prueba: ${fmt(globalRemaining)}`}
+          </span>
         </div>
       )}
 
