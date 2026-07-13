@@ -52,20 +52,33 @@ function conceptTheory(concept) {
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 const bestKey = (id) => `ta-best-${id}`;
 
-// ─── Distribución de la respuesta correcta ──────────────────────────────────────
+// ─── Barajado aleatorio de las opciones ─────────────────────────────────────────
 // En los datos la respuesta correcta se lista primera (posición A) por comodidad.
-// Aquí rotamos las opciones de forma DETERMINISTA (misma pregunta → siempre la
-// misma posición, pero repartida entre A/B/C/D) para que la correcta no sea
-// siempre la "A".
+// Aquí barajamos TODAS las opciones (Fisher–Yates) con una semilla determinista
+// por pregunta: el orden se ve aleatorio y la correcta cae en cualquier posición,
+// pero es estable entre renders (no salta mientras el alumno responde).
 function hashStr(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
   return h;
 }
-function rotateOptions(options, exId, qi) {
-  const n = options.length;
-  const k = (hashStr(exId) + qi) % n; // la correcta (índice 0) termina en la posición k
-  return options.map((_, i) => options[(i - k + n) % n]);
+// PRNG determinista (mulberry32)
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function shuffleOptions(options, exId, qi) {
+  const rand = mulberry32(hashStr(`${exId}-${qi}`));
+  const arr = options.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
 const TestAudio = () => {
@@ -502,7 +515,7 @@ const TestAudio = () => {
               </div>
 
               <div className="ta-options">
-                {rotateOptions(q.options, exercise.id, qi).map((opt, oi) => {
+                {shuffleOptions(q.options, exercise.id, qi).map((opt, oi) => {
                   const selected = chosen === opt;
                   const correctOpt = answered && opt === q.answer;
                   const wrongPick = answered && selected && opt !== q.answer;
