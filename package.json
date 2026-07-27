@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "audio:generate": "python3 scripts/generate-audio.py",
+    "audio:verify": "node scripts/verify-audio.mjs",
+    "audio:intelligibility": "python3 scripts/check-intelligibility.py"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.1",
@@ -37,6 +40,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "playwright": "^1.62.0",
     "postcss": "^8.5.15",
     "tailwindcss": "^3.4.19",
     "vite": "^7.0.4"

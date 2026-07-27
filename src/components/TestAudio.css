@@ -211,6 +211,20 @@
 .ta-plays { font-size: 0.78rem; color: var(--text-secondary); font-weight: 600; }
 .ta-plays.used { color: #ef4444; display: flex; align-items: center; gap: 0.35rem; }
 
+/* Aviso cuando el audio no llega a sonar (no se descuenta la reproducción) */
+.ta-audio-error {
+  display: flex; align-items: flex-start; gap: 0.65rem;
+  background: rgba(239, 68, 68, 0.10);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  border-left: 4px solid #ef4444;
+  border-radius: 0.75rem;
+  padding: 0.8rem 1rem;
+  margin: -0.5rem 0 1.25rem;
+  color: var(--text-primary);
+  font-size: 0.88rem; line-height: 1.45;
+}
+.ta-audio-error svg { color: #ef4444; margin-top: 0.15rem; flex-shrink: 0; }
+
 /* ── Preguntas ── */
 .ta-questions { display: flex; flex-direction: column; gap: 1rem; }
 .ta-question {

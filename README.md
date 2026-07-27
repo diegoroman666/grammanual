@@ -1,6 +1,32 @@
-# React + Vite
+# GramManual
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación React + Vite para aprender gramática inglesa.
+
+## Audios de «Test Audio»
+
+Los 30 ejercicios de comprensión auditiva se sirven como MP3 pregenerados desde
+`public/audio/`. **No** se sintetizan en el navegador: hacerlo dejaba la sección
+muda en cualquier dispositivo sin voces en inglés instaladas. Para regenerarlos o
+verificarlos, ver [`scripts/README.md`](scripts/README.md):
+
+```bash
+npm run audio:generate         # regenera los MP3 desde las transcripciones
+npm run audio:verify           # comprueba en un navegador real que suenan
+npm run audio:intelligibility  # comprueba que dicen lo que deberían
+```
+
+## Desarrollo
+
+```bash
+npm install
+npm run dev
+npm run build
+npm run lint
+```
+
+---
+
+Este proyecto usa la plantilla de React en Vite con HMR y unas reglas de ESLint.
 
 Currently, two official plugins are available:
 
