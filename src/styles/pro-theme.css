@@ -29,28 +29,44 @@ h2 {
   padding-bottom: 5px;
 }
 
-.table {
-  background-color: var(--bg-card);
-  color: var(--text-primary);
-  border: none;
+/* Tablas de conjugación.
+
+   Bootstrap pinta cada celda con sus propias variables (`--bs-table-bg: #fff`,
+   `--bs-table-color: #000`) mediante `.table > :not(caption) > * > *`. No basta
+   con poner un `color` al `td`: si se cambia el texto pero la celda sigue
+   blanca, queda blanco sobre blanco. Hay que redefinir las variables de
+   Bootstrap para que fondo y texto cambien juntos.
+
+   El selector lleva `table.table` a propósito: con solo `.table` la declaración
+   empata en especificidad con la de Bootstrap y gana la que cargue después. */
+.table,
+table.table {
   --bs-table-color: var(--text-primary);
   --bs-table-bg: transparent;
   --bs-table-border-color: var(--border-color);
+  --bs-table-striped-color: var(--text-primary);
+  --bs-table-striped-bg: var(--card-hover);
+  --bs-table-hover-color: var(--text-primary);
+  --bs-table-hover-bg: var(--card-hover);
+  --bs-table-accent-bg: transparent;
+
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: none;
 }
 
-.table th {
-  background-color: var(--bg-secondary) !important;
-  color: var(--accent) !important;
-  border-bottom: 1px solid var(--border-color) !important;
+table.table th {
+  background-color: var(--bg-secondary);
+  color: var(--accent);
+  border-bottom: 1px solid var(--border-color);
 }
 
-.table td {
-  color: var(--text-primary) !important;
-  border-top: 1px solid var(--border-color) !important;
+table.table td {
+  border-top: 1px solid var(--border-color);
 }
 
-.table tbody tr:nth-child(even) {
-  background-color: var(--card-hover) !important;
+table.table tbody tr:nth-child(even) {
+  background-color: var(--card-hover);
 }
 
 .btn {
