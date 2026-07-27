@@ -46,18 +46,29 @@ texto blanco. Invertirlo deja el texto en 3,2:1 y se lee mal.
 
 ## Repaso guiado (`verify-review-flow.mjs`)
 
-Al terminar una prueba de Test Audio, la pantalla de resultados sugiere los
-temas fallados. Entrar en uno navega a Teoría, lo que desmonta el componente y
-antes se llevaba por delante el puntaje: al volver aparecía la lista de pruebas
-y no había forma de repasar un tema tras otro.
+Al terminar una prueba, la pantalla de resultados invita a repasar el contenido
+teórico. Pulsar ese enlace navega a Teoría, lo que desmonta el componente y
+antes se llevaba por delante el puntaje: al volver aparecía la pantalla inicial
+y no había forma de repasar un tema y seguir con el siguiente.
 
-Ahora se guarda una foto del resultado en `sessionStorage` mientras dura el
-repaso y Teoría muestra un botón «Volver a los resultados». El script recorre el
-ciclo completo en **los dos modos** (contrarreloj y tiempo libre): responder la
-prueba, entrar en una sugerencia, volver y comprobar que el puntaje sigue ahí,
-entrar en otra, y verificar que la flecha atrás del navegador hace lo mismo.
-También comprueba lo contrario: que al salir a propósito («Otras pruebas» o
-repetir) el puntaje viejo **no** reaparece.
+Afecta a **dos secciones**, y las dos están arregladas:
+
+- **Test Audio** (`/test-audio`), con su lista de temas fallados.
+- **Módulos** (`/prueba`), con su botón «Ver Teoría».
+
+Ambas usan `src/services/reviewSession.js`, que guarda una foto del resultado en
+`sessionStorage` mientras dura el repaso, y Teoría muestra un botón de vuelta
+—el texto lo decide quien navega, vía `theoryNavState`—.
+
+El script recorre el ciclo completo en Test Audio (en **los dos modos**,
+contrarreloj y tiempo libre) y en Módulos: terminar la prueba, entrar en el
+contenido teórico, volver y comprobar que el puntaje sigue ahí, repetir con otro
+tema, y verificar que la flecha atrás del navegador hace lo mismo. También
+comprueba lo contrario: que al salir a propósito (repetir, «Otras pruebas»,
+«Ruta») el resultado viejo **no** reaparece.
+
+Se usa `sessionStorage` y no `localStorage` a propósito: el repaso pertenece a
+esta visita, no debe reaparecer días después.
 
 ---
 

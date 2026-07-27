@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { tests, TOTAL_QUESTIONS } from '../data/testAudioData';
 import { translateText } from '../services/translateApi';
+import { makeReviewSession, theoryNavState } from '../services/reviewSession';
 import './TestAudio.css';
 
 const MAX_PLAYS = 3;         // El audio se puede escuchar como máximo 3 veces
@@ -68,44 +69,11 @@ function conceptTheory(concept) {
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 const bestKey = (id) => `ta-best-${id}`;
 
-// ─── Repaso guiado tras la prueba ──────────────────────────────────────────────
-// Al terminar, la pantalla de resultados propone los temas fallados. Entrar en
-// uno lleva a /teoria, lo que DESMONTA este componente y se llevaba por delante
-// el puntaje: al volver aparecía otra vez la lista de pruebas y el alumno perdía
-// la pantalla de resultados y el resto de sugerencias.
-//
-// Para evitarlo se guarda una foto del resultado en sessionStorage mientras dura
-// el repaso. Vale para los dos modos (contrarreloj y tiempo libre) y sobrevive
-// tanto al botón «Volver a los resultados» de Teoría como a la flecha atrás del
-// navegador. Se borra en cuanto el alumno sale de los resultados a propósito
-// (repetir prueba o elegir otra), para que nunca reaparezca un puntaje viejo.
-const REVIEW_KEY = 'ta-review-session';
-
-const loadReview = () => {
-  try {
-    const raw = sessionStorage.getItem(REVIEW_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-};
-
-const saveReview = (data) => {
-  try {
-    sessionStorage.setItem(REVIEW_KEY, JSON.stringify(data));
-  } catch {
-    // Modo privado o almacenamiento lleno: el repaso seguirá funcionando con el
-    // botón «Volver a los resultados», solo se pierde al recargar la página.
-  }
-};
-
-const clearReview = () => {
-  try {
-    sessionStorage.removeItem(REVIEW_KEY);
-  } catch {
-    /* nada que limpiar */
-  }
-};
+// Repaso guiado tras la prueba: al entrar en un tema desde los resultados se
+// navega a /teoria y este componente se desmonta, así que el puntaje se guarda
+// para recuperarlo al volver. Ver src/services/reviewSession.js.
+// Vale para los dos modos, contrarreloj y tiempo libre.
+const review = makeReviewSession('ta-review-session');
 
 // Trocea un texto en oraciones (para encolar utterances cortas y fiables).
 // Si alguna oración fuese muy larga, la parte además por comas.
@@ -163,7 +131,7 @@ const TestAudio = () => {
 
   // Si el alumno estaba repasando los temas fallados, se recupera su resultado
   // para devolverlo a la pantalla del puntaje en vez de a la lista de pruebas.
-  const restored = useRef(loadReview()).current;
+  const restored = useRef(review.load()).current;
   const restoredTest = restored ? tests.find(t => t.id === restored.testId) : null;
 
   const [selectedTest, setSelectedTest] = useState(restoredTest || null);
@@ -277,7 +245,7 @@ const TestAudio = () => {
   }, [stopAudio]);
 
   const openTest = (test) => {
-    clearReview();          // empieza una prueba nueva: el repaso anterior ya no vale
+    review.clear();          // empieza una prueba nueva: el repaso anterior ya no vale
     setReviewed([]);
     setSelectedTest(test);
     setMode(null);
@@ -290,7 +258,7 @@ const TestAudio = () => {
   };
 
   const startWithMode = (m) => {
-    clearReview();
+    review.clear();
     setReviewed([]);
     setMode(m);
     setExerciseIndex(0);
@@ -303,7 +271,7 @@ const TestAudio = () => {
   };
 
   const backToList = () => {
-    clearReview();
+    review.clear();
     setReviewed([]);
     stopAudio();
     setSelectedTest(null);
@@ -484,7 +452,7 @@ const TestAudio = () => {
     stopAudio();
     const alreadySeen = reviewed.includes(concept) ? reviewed : [...reviewed, concept];
     setReviewed(alreadySeen);
-    saveReview({
+    review.save({
       testId: selectedTest.id,
       mode,
       answers,
@@ -492,11 +460,7 @@ const TestAudio = () => {
       reviewed: alreadySeen,
     });
     navigate('/teoria', {
-      state: {
-        ...(tab ? { tab } : {}),
-        backTo: '/test-audio',
-        backLabel: 'Volver a los resultados de la prueba',
-      },
+      state: theoryNavState(tab, '/test-audio', 'Volver a los resultados de la prueba'),
     });
   };
 

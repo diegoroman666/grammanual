@@ -7,7 +7,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { modules, levelMeta, getStars, MAX_SCORE } from '../data/pruebaData';
 import { saveTestResult, getModuleResult, isLevelUnlocked } from '../services/progressService';
+import { makeReviewSession, theoryNavState } from '../services/reviewSession';
 import './PruebaContrarreloj.css';
+
+// Igual que en Test Audio: pulsar «Ver Teoría» desde los resultados navega a
+// /teoria y desmonta este componente, así que el resultado se guarda para
+// recuperarlo al volver. Ver src/services/reviewSession.js.
+const review = makeReviewSession('pc-review-session');
 
 // ─── Circular timer ───────────────────────────────────────────────────────────
 const CircularTimer = ({ timeLeft, total, urgent }) => {
@@ -102,8 +108,15 @@ const PruebaContrarreloj = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [phase, setPhase]   = useState(PHASES.SELECT);
-  const [mod, setMod]       = useState(null);
+  // Si el alumno estaba consultando la teoría desde sus resultados, se recupera
+  // el resultado para devolverlo a la pantalla del puntaje. Se ignora cuando se
+  // llega con un moduleId concreto (desde Ruta): ahí quiere empezar ese módulo,
+  // no volver a un resultado anterior.
+  const restored = useRef(location.state?.moduleId ? null : review.load()).current;
+  const restoredMod = restored ? modules.find(m => m.id === restored.moduleId) : null;
+
+  const [phase, setPhase]   = useState(restoredMod ? PHASES.RESULT : PHASES.SELECT);
+  const [mod, setMod]       = useState(restoredMod || null);
   const [countdown, setCountdown] = useState(3);
   const [qIndex, setQIndex] = useState(0);
   const [score, setScore]   = useState(0);
@@ -111,7 +124,7 @@ const PruebaContrarreloj = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [chosen, setChosen] = useState(null);
   const [revealed, setRevealed] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState(restoredMod ? restored.result : null);
   const timerRef = useRef(null);
 
   // Auto-start if launched from Ruta with a moduleId
@@ -124,6 +137,7 @@ const PruebaContrarreloj = () => {
   }, []);
 
   const startModule = (selected) => {
+    review.clear();   // arranca una prueba nueva: el repaso anterior ya no vale
     setMod(selected);
     setPhase(PHASES.COUNTDOWN);
     setCountdown(3);
@@ -132,6 +146,21 @@ const PruebaContrarreloj = () => {
     setCorrect(0);
     setChosen(null);
     setRevealed(false);
+  };
+
+  // Abre la teoría del módulo SIN perder la pantalla de resultados: se guarda el
+  // puntaje y se le indica a Teoría de dónde viene para que ofrezca la vuelta.
+  const goTheory = () => {
+    review.save({ moduleId: mod.id, result });
+    navigate('/teoria', {
+      state: theoryNavState(mod.teoriaTab, '/prueba', 'Volver a los resultados del módulo'),
+    });
+  };
+
+  // Salidas deliberadas de los resultados: el repaso deja de tener sentido.
+  const leaveResults = (to) => {
+    review.clear();
+    navigate(to);
   };
 
   // Countdown effect
@@ -313,10 +342,10 @@ const PruebaContrarreloj = () => {
             <button className="res-btn res-retry" onClick={() => startModule(mod)}>
               <FontAwesomeIcon icon={faRedo} /> Repetir
             </button>
-            <button className="res-btn res-theory" onClick={() => navigate('/teoria', { state: { tab: mod.teoriaTab } })}>
+            <button className="res-btn res-theory" onClick={goTheory}>
               <FontAwesomeIcon icon={faBook} /> Ver Teoría
             </button>
-            <button className="res-btn res-ruta" onClick={() => navigate('/ruta')}>
+            <button className="res-btn res-ruta" onClick={() => leaveResults('/ruta')}>
               <FontAwesomeIcon icon={faHome} /> Ruta
             </button>
           </div>
