@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBookOpen, faListUl, faClock, faMapMarkerAlt, faQuestion,
   faGraduationCap, faSearch, faChevronDown, faChevronUp,
-  faLink, faSitemap, faCodeBranch, faExchangeAlt, faCogs
+  faLink, faSitemap, faCodeBranch, faExchangeAlt, faCogs, faArrowLeft
 } from '@fortawesome/free-solid-svg-icons';
 import { levelMeta } from '../data/pruebaData';
 import './Teoria.css';
@@ -1005,11 +1005,18 @@ const tabs = [
 
 const Teoria = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(location.state?.tab || 'regular');
 
   useEffect(() => {
     if (location.state?.tab) setActiveTab(location.state.tab);
   }, [location.state]);
+
+  // Cuando se llega desde los resultados de una prueba, se ofrece una vuelta
+  // explícita: el componente de origen guardó el puntaje y lo recupera al
+  // volver, así el alumno puede repasar un tema tras otro sin perderlo.
+  const backTo = location.state?.backTo;
+  const backLabel = location.state?.backLabel || 'Volver';
 
   const renderContent = () => {
     switch (activeTab) {
@@ -1032,6 +1039,12 @@ const Teoria = () => {
 
   return (
     <div className="teoria-container">
+      {backTo && (
+        <button className="teoria-back" onClick={() => navigate(backTo)}>
+          <FontAwesomeIcon icon={faArrowLeft} /> {backLabel}
+        </button>
+      )}
+
       <div className="teoria-header">
         <h1><FontAwesomeIcon icon={faGraduationCap} /> Teoría Gramatical</h1>
         <p>Consulta las reglas y listas esenciales del inglés</p>

@@ -3,36 +3,100 @@
 /* ═══════════════════════════════════════════════════════
    THEME VARIABLES  (used by all component CSS files)
    ═══════════════════════════════════════════════════════ */
+/* ─────────────────────────────────────────────────────────────────────────────
+   PALETA INACAP — rojo, negro y blanco.
+   Oscuro: negro de fondo, texto blanco, rojo de acento.
+   Claro:  blanco de fondo, texto negro, rojo de acento.
+
+   Todos los pares texto/fondo de esta paleta se comprobaron con el cálculo de
+   contraste WCAG y superan AA (4.5:1). Lo importante al tocar estos valores:
+
+     • `--accent` es el rojo para TEXTO sobre el fondo de la página.
+     • `--accent-contrast` es el color del texto que va ENCIMA de un fondo de
+       acento. NO es el mismo en los dos temas y por eso existe como variable:
+       en oscuro el rojo es claro y pide texto negro (5.92:1); en claro el rojo
+       es oscuro y pide texto blanco (6.22:1). Poner blanco sobre el rojo claro
+       del tema oscuro daría 3.2:1 y el texto se leería mal.
+     • `--accent-soft` / `--accent-soft-strong` son tintes translúcidos del rojo
+       para píldoras y franjas. Como son translúcidos, el texto que va encima
+       sigue siendo `--text-primary`, nunca el acento.
+   ───────────────────────────────────────────────────────────────────────────── */
 :root {
-  /* Dark theme — default */
-  --bg-primary:    #0B1220;
+  /* Tema oscuro — por defecto */
+  --bg-primary:    #0E0E10;
   --bg-secondary:  rgba(255, 255, 255, 0.06);
-  --bg-card:       rgba(255, 255, 255, 0.07);
-  --text-primary:  #F1F5F9;
-  --text-secondary:#94A3B8;
-  --accent-gold:   #F0B429;
-  --accent-cyan:   #22D3EE;
-  --border-color:  rgba(255, 255, 255, 0.10);
-  --shadow-color:  rgba(0, 0, 0, 0.40);
-  --nav-bg:        rgba(11, 18, 32, 0.85);
-  --footer-bg:     rgba(11, 18, 32, 0.80);
-  --card-hover:    rgba(255, 255, 255, 0.04);
+  --bg-card:       #1A1A1D;
+  --text-primary:  #FFFFFF;
+  --text-secondary:#B8B8BE;
+  --accent:        #FF4D57;
+  --accent-contrast: #0E0E10;   /* texto NEGRO sobre el rojo claro del tema oscuro */
+  --accent-soft:       rgba(255, 77, 87, 0.14);
+  --accent-soft-strong:rgba(255, 77, 87, 0.28);
+  --emphasis:      #FFFFFF;              /* segundo acento: blanco */
+  --emphasis-contrast: #0E0E10;
+  --emphasis-soft: rgba(255, 255, 255, 0.12);
+  --border-color:  rgba(255, 255, 255, 0.14);
+  --shadow-color:  rgba(0, 0, 0, 0.55);
+  --nav-bg:        rgba(14, 14, 16, 0.92);
+  --footer-bg:     rgba(14, 14, 16, 0.90);
+  --card-hover:    rgba(255, 255, 255, 0.05);
+
+  /* Alias heredados: el resto de hojas de estilo siguen nombrando los acentos
+     antiguos. Se mantienen para no reescribir 36 usos, ya apuntando al rojo y
+     al blanco/negro de INACAP. */
+  --accent-cyan:   var(--accent);
+  --accent-gold:   var(--emphasis);
+
+  /* Verde de «correcto». No forma parte de la marca, pero se mantiene porque
+     acierto/error deben distinguirse por algo más que la posición —y con un rojo
+     de marca, teñir de rojo también los errores sería confuso. Se aclara
+     respecto al verde anterior, que sobre fondo oscuro se quedaba en 4,03:1 y
+     no llegaba a AA. */
+  --success:      #34D399;
+  --success-soft: rgba(52, 211, 153, 0.16);
+
+  /* Niveles: gris → blanco → rojo (intensidad creciente). Los tres superan AA
+     sobre el fondo oscuro; el azul y el morado de antes no llegaban. */
+  --level-beginner:        #B8B8BE;
+  --level-beginner-bg:     rgba(184, 184, 190, 0.12);
+  --level-intermediate:    #FFFFFF;
+  --level-intermediate-bg: rgba(255, 255, 255, 0.12);
+  --level-expert:          #FF4D57;
+  --level-expert-bg:       rgba(255, 77, 87, 0.14);
 }
 
 :root.light {
-  /* Light theme */
-  --bg-primary:    #F8FAFC;
-  --bg-secondary:  rgba(99, 102, 241, 0.07);
-  --bg-card:       rgba(255, 255, 255, 0.92);
-  --text-primary:  #1E293B;
-  --text-secondary:#64748B;
-  --accent-gold:   #D97706;
-  --accent-cyan:   #0891B2;
-  --border-color:  rgba(0, 0, 0, 0.08);
-  --shadow-color:  rgba(0, 0, 0, 0.08);
-  --nav-bg:        rgba(255, 255, 255, 0.88);
-  --footer-bg:     rgba(248, 250, 252, 0.92);
-  --card-hover:    rgba(0, 0, 0, 0.025);
+  /* Tema claro */
+  --bg-primary:    #FFFFFF;
+  --bg-secondary:  rgba(193, 18, 31, 0.06);
+  --bg-card:       #F4F4F6;
+  --text-primary:  #1A1A1D;
+  --text-secondary:#5A5A63;
+  --accent:        #C1121F;
+  --accent-contrast: #FFFFFF;   /* texto BLANCO sobre el rojo oscuro del tema claro */
+  --accent-soft:       rgba(193, 18, 31, 0.10);
+  --accent-soft-strong:rgba(193, 18, 31, 0.20);
+  --emphasis:      #1A1A1D;              /* segundo acento: negro */
+  --emphasis-contrast: #FFFFFF;
+  --emphasis-soft: rgba(26, 26, 29, 0.08);
+  --border-color:  rgba(26, 26, 29, 0.14);
+  --shadow-color:  rgba(0, 0, 0, 0.12);
+  --nav-bg:        rgba(255, 255, 255, 0.94);
+  --footer-bg:     rgba(255, 255, 255, 0.94);
+  --card-hover:    rgba(26, 26, 29, 0.04);
+
+  --accent-cyan:   var(--accent);
+  --accent-gold:   var(--emphasis);
+
+  --success:      #0F6B32;
+  --success-soft: rgba(15, 107, 50, 0.12);
+
+  --level-beginner:        #5A5A63;
+  --level-beginner-bg:     rgba(90, 90, 99, 0.10);
+  --level-intermediate:    #1A1A1D;
+  --level-intermediate-bg: rgba(26, 26, 29, 0.08);
+  --level-expert:          #C1121F;
+  --level-expert-bg:       rgba(193, 18, 31, 0.10);
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -67,34 +131,37 @@
   animation: blobFloat ease-in-out infinite;
 }
 
-/* Dark mode blobs */
+/* Blobs del fondo — rojo y grises de INACAP, nada de azules ni morados.
+   Son puramente decorativos y van MUY difuminados y con poca opacidad para no
+   levantar el fondo bajo el texto: si aclarasen la página, el texto blanco del
+   tema oscuro perdería contraste. */
 .app-wrapper.dark .blob-1 {
   width: 520px;
   height: 520px;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.5), rgba(99, 102, 241, 0.35));
+  background: radial-gradient(circle, rgba(255, 77, 87, 0.42), rgba(120, 12, 20, 0.30));
   top: -150px;
   left: -120px;
-  opacity: 0.45;
+  opacity: 0.34;
   animation-duration: 11s;
   animation-delay: 0s;
 }
 .app-wrapper.dark .blob-2 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.4), rgba(14, 165, 233, 0.35));
+  background: radial-gradient(circle, rgba(193, 18, 31, 0.38), rgba(255, 255, 255, 0.10));
   top: 40%;
   right: -170px;
-  opacity: 0.38;
+  opacity: 0.28;
   animation-duration: 14s;
   animation-delay: -4s;
 }
 .app-wrapper.dark .blob-3 {
   width: 440px;
   height: 440px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.4), rgba(6, 182, 212, 0.35));
+  background: radial-gradient(circle, rgba(255, 77, 87, 0.30), rgba(255, 255, 255, 0.08));
   bottom: -90px;
   left: 32%;
-  opacity: 0.32;
+  opacity: 0.24;
   animation-duration: 12s;
   animation-delay: -7s;
 }
@@ -103,30 +170,30 @@
 .app-wrapper.light .blob-1 {
   width: 520px;
   height: 520px;
-  background: radial-gradient(circle, rgba(186, 230, 253, 0.9), rgba(196, 181, 253, 0.6));
+  background: radial-gradient(circle, rgba(255, 205, 209, 0.85), rgba(193, 18, 31, 0.18));
   top: -150px;
   left: -120px;
-  opacity: 0.55;
+  opacity: 0.42;
   animation-duration: 11s;
   animation-delay: 0s;
 }
 .app-wrapper.light .blob-2 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(199, 210, 254, 0.8), rgba(125, 211, 252, 0.6));
+  background: radial-gradient(circle, rgba(255, 224, 226, 0.85), rgba(26, 26, 29, 0.10));
   top: 40%;
   right: -170px;
-  opacity: 0.50;
+  opacity: 0.38;
   animation-duration: 14s;
   animation-delay: -4s;
 }
 .app-wrapper.light .blob-3 {
   width: 440px;
   height: 440px;
-  background: radial-gradient(circle, rgba(165, 180, 252, 0.8), rgba(103, 232, 249, 0.6));
+  background: radial-gradient(circle, rgba(255, 214, 217, 0.85), rgba(26, 26, 29, 0.08));
   bottom: -90px;
   left: 32%;
-  opacity: 0.45;
+  opacity: 0.34;
   animation-duration: 12s;
   animation-delay: -7s;
 }
@@ -175,7 +242,7 @@
   color: var(--accent-cyan);
 }
 .nav-item.nav-active {
-  background: rgba(34, 211, 238, 0.10);
+  background: var(--accent-soft);
   color: var(--accent-cyan);
   border-bottom-color: var(--accent-cyan);
 }
@@ -233,7 +300,7 @@
   margin-bottom: 2px;
 }
 .mobile-nav-item:hover    { background: var(--bg-secondary); color: var(--accent-cyan); }
-.mobile-nav-item.nav-active { background: rgba(34, 211, 238, 0.10); color: var(--accent-cyan); }
+.mobile-nav-item.nav-active { background: var(--accent-soft); color: var(--accent-cyan); }
 
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-8px); }

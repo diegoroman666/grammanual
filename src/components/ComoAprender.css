@@ -37,7 +37,7 @@
   align-items: flex-start;
   gap: 0.9rem;
   padding: 1.1rem 1.25rem;
-  background: rgba(0, 255, 255, 0.08);
+  background: var(--accent-soft);
   border: 1px solid var(--accent-cyan);
   border-radius: 0.9rem;
 }
@@ -156,7 +156,7 @@
   font-size: 1.02rem;
 }
 
-.stage-step-done { color: #27ae60; font-size: 0.9rem; margin-left: 0.15rem; }
+.stage-step-done { color: var(--success); font-size: 0.9rem; margin-left: 0.15rem; }
 
 .stage-step-desc {
   color: var(--text-secondary);

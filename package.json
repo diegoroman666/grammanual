@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "audio:generate": "python3 scripts/generate-audio.py",
     "audio:verify": "node scripts/verify-audio.mjs",
-    "audio:intelligibility": "python3 scripts/check-intelligibility.py"
+    "audio:intelligibility": "python3 scripts/check-intelligibility.py",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "check:review-flow": "node scripts/verify-review-flow.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.1",

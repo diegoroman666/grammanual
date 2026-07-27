@@ -184,9 +184,12 @@
   transition: width 0.4s ease;
 }
 
+/* El fondo de esta píldora es `--border-color`, que oscurece la tarjeta; con el
+   texto secundario encima se quedaba en 4,25:1 en el tema claro. El texto va en
+   el color principal para que la etiqueta se lea siempre. */
 .module-status-tag {
   font-size: 0.72rem;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   background: var(--border-color);
   padding: 0.1rem 0.45rem;
   border-radius: 1rem;
@@ -220,19 +223,24 @@
   transition: all 0.15s;
 }
 
+/* Botón secundario: borde e icono en rojo, pero el TEXTO en el color normal.
+   El rojo sobre el tinte rojo de esta tarjeta se quedaba en 3,84:1 y no llegaba
+   a AA; el contorno ya transmite que es de acento sin sacrificar la lectura. */
 .mod-btn-theory {
-  background: rgba(0,255,255,0.12);
-  color: var(--accent-cyan);
+  background: var(--accent-soft);
+  color: var(--text-primary);
   border: 1px solid var(--accent-cyan);
 }
-.mod-btn-theory:hover { background: var(--accent-cyan); color: var(--bg-primary); }
+.mod-btn-theory svg { color: var(--accent-cyan); }
+.mod-btn-theory:hover { background: var(--accent-cyan); color: var(--accent-contrast); }
+.mod-btn-theory:hover svg { color: var(--accent-contrast); }
 
 .mod-btn-play {
   background: var(--accent-gold);
-  color: var(--bg-primary);
+  color: var(--emphasis-contrast);
   border: 1px solid var(--accent-gold);
 }
-.mod-btn-play:hover { background: #c8960c; }
+.mod-btn-play:hover { filter: brightness(0.92); }
 
 /* Stars */
 .stars-display svg {
@@ -383,7 +391,7 @@
 
 .practica-libre-cta:hover {
   border-color: var(--accent-cyan);
-  background: rgba(0, 255, 255, 0.06);
+  background: var(--accent-soft);
 }
 
 .practica-libre-cta-icon {

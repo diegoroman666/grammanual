@@ -1,3 +1,66 @@
+# Scripts de verificación
+
+Dos bloques: los audios de «Test Audio» y las comprobaciones de interfaz
+(contraste de color y repaso guiado).
+
+| Script | Qué comprueba |
+| --- | --- |
+| `npm run audio:generate` | Genera los MP3 desde las transcripciones |
+| `npm run audio:verify` | Que los 30 audios suenan en un navegador real |
+| `npm run audio:intelligibility` | Que dicen lo que deberían decir |
+| `npm run check:contrast` | Que NINGÚN texto queda ilegible, en los dos temas |
+| `npm run check:review-flow` | Que tras una prueba se puede repasar tema a tema sin perder el puntaje |
+
+Los tres últimos necesitan el sitio servido:
+
+```bash
+npm run build && npx vite preview --port 4173 &
+npm run check:contrast
+npm run check:review-flow
+```
+
+---
+
+## Contraste de color (`check-contrast.mjs`)
+
+La paleta es la de INACAP: rojo, negro y blanco. El riesgo evidente al cambiar
+colores es dejar texto que no se lee, y revisar 4.000 líneas de CSS a ojo no es
+fiable. Este script recorre las nueve páginas en tema claro y oscuro y, para
+cada nodo de texto, calcula el contraste WCAG contra el fondo **realmente
+pintado** detrás: sube por los ancestros componiendo las capas translúcidas.
+Falla si algo baja de AA (4,5:1, o 3:1 en texto grande).
+
+Dos casos que costó modelar bien y conviene no romper:
+
+- **Degradados de fondo.** `getComputedStyle().backgroundColor` devuelve
+  `transparent` cuando el fondo es un `linear-gradient`, así que el script saca
+  las paradas de color del `background-image` y exige que el texto se lea sobre
+  **todas** ellas, no solo sobre una.
+- **`background-clip: text`.** Ahí el degradado no es el fondo: son las letras.
+  Se trata como color de texto y se mide contra el fondo del ancestro.
+
+Al tocar colores, lo importante: `--accent-contrast` es el color del texto que
+va **encima** de un fondo de acento, y no es el mismo en los dos temas. En
+oscuro el rojo es claro y pide texto negro; en claro el rojo es oscuro y pide
+texto blanco. Invertirlo deja el texto en 3,2:1 y se lee mal.
+
+## Repaso guiado (`verify-review-flow.mjs`)
+
+Al terminar una prueba de Test Audio, la pantalla de resultados sugiere los
+temas fallados. Entrar en uno navega a Teoría, lo que desmonta el componente y
+antes se llevaba por delante el puntaje: al volver aparecía la lista de pruebas
+y no había forma de repasar un tema tras otro.
+
+Ahora se guarda una foto del resultado en `sessionStorage` mientras dura el
+repaso y Teoría muestra un botón «Volver a los resultados». El script recorre el
+ciclo completo en **los dos modos** (contrarreloj y tiempo libre): responder la
+prueba, entrar en una sugerencia, volver y comprobar que el puntaje sigue ahí,
+entrar en otra, y verificar que la flecha atrás del navegador hace lo mismo.
+También comprueba lo contrario: que al salir a propósito («Otras pruebas» o
+repetir) el puntaje viejo **no** reaparece.
+
+---
+
 # Audios de la sección «Test Audio»
 
 ## Por qué existen estos scripts

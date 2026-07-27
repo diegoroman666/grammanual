@@ -68,6 +68,45 @@ function conceptTheory(concept) {
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 const bestKey = (id) => `ta-best-${id}`;
 
+// ─── Repaso guiado tras la prueba ──────────────────────────────────────────────
+// Al terminar, la pantalla de resultados propone los temas fallados. Entrar en
+// uno lleva a /teoria, lo que DESMONTA este componente y se llevaba por delante
+// el puntaje: al volver aparecía otra vez la lista de pruebas y el alumno perdía
+// la pantalla de resultados y el resto de sugerencias.
+//
+// Para evitarlo se guarda una foto del resultado en sessionStorage mientras dura
+// el repaso. Vale para los dos modos (contrarreloj y tiempo libre) y sobrevive
+// tanto al botón «Volver a los resultados» de Teoría como a la flecha atrás del
+// navegador. Se borra en cuanto el alumno sale de los resultados a propósito
+// (repetir prueba o elegir otra), para que nunca reaparezca un puntaje viejo.
+const REVIEW_KEY = 'ta-review-session';
+
+const loadReview = () => {
+  try {
+    const raw = sessionStorage.getItem(REVIEW_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+const saveReview = (data) => {
+  try {
+    sessionStorage.setItem(REVIEW_KEY, JSON.stringify(data));
+  } catch {
+    // Modo privado o almacenamiento lleno: el repaso seguirá funcionando con el
+    // botón «Volver a los resultados», solo se pierde al recargar la página.
+  }
+};
+
+const clearReview = () => {
+  try {
+    sessionStorage.removeItem(REVIEW_KEY);
+  } catch {
+    /* nada que limpiar */
+  }
+};
+
 // Trocea un texto en oraciones (para encolar utterances cortas y fiables).
 // Si alguna oración fuese muy larga, la parte además por comas.
 function splitSentences(text) {
@@ -122,20 +161,27 @@ function shuffleOptions(options, exId, qi) {
 const TestAudio = () => {
   const navigate = useNavigate();
 
-  const [selectedTest, setSelectedTest] = useState(null);
-  const [mode, setMode] = useState(null);          // null | 'timed' | 'free'
+  // Si el alumno estaba repasando los temas fallados, se recupera su resultado
+  // para devolverlo a la pantalla del puntaje en vez de a la lista de pruebas.
+  const restored = useRef(loadReview()).current;
+  const restoredTest = restored ? tests.find(t => t.id === restored.testId) : null;
+
+  const [selectedTest, setSelectedTest] = useState(restoredTest || null);
+  const [mode, setMode] = useState(restoredTest ? restored.mode : null);  // null | 'timed' | 'free'
   const [exerciseIndex, setExerciseIndex] = useState(0);
-  const [answers, setAnswers] = useState({});      // key `${exId}-${qi}` -> option ('__timeout__' si se agotó el tiempo)
+  const [answers, setAnswers] = useState(restoredTest ? restored.answers : {});  // key `${exId}-${qi}` -> option ('__timeout__' si se agotó el tiempo)
   const [plays, setPlays] = useState(0);
   const [audioStatus, setAudioStatus] = useState('idle');  // idle | loading | playing | error
   const [audioError, setAudioError] = useState('');
   const [showTranscript, setShowTranscript] = useState(false);
   const [translation, setTranslation] = useState('');
   const [translating, setTranslating] = useState(false);
-  const [finished, setFinished] = useState(false);
+  const [finished, setFinished] = useState(Boolean(restoredTest));
   const [voices, setVoices] = useState([]);
   const [timeLeft, setTimeLeft] = useState(TIME_PER_EX);
-  const [elapsed, setElapsed] = useState(0);
+  const [elapsed, setElapsed] = useState(restoredTest ? restored.elapsed : 0);
+  // Temas que el alumno ya abrió desde las sugerencias de repaso.
+  const [reviewed, setReviewed] = useState(restoredTest ? (restored.reviewed || []) : []);
 
   const rotationRef = useRef(0);
   const keepAliveRef = useRef(null);
@@ -231,6 +277,8 @@ const TestAudio = () => {
   }, [stopAudio]);
 
   const openTest = (test) => {
+    clearReview();          // empieza una prueba nueva: el repaso anterior ya no vale
+    setReviewed([]);
     setSelectedTest(test);
     setMode(null);
     setExerciseIndex(0);
@@ -242,6 +290,8 @@ const TestAudio = () => {
   };
 
   const startWithMode = (m) => {
+    clearReview();
+    setReviewed([]);
     setMode(m);
     setExerciseIndex(0);
     setAnswers({});
@@ -253,6 +303,8 @@ const TestAudio = () => {
   };
 
   const backToList = () => {
+    clearReview();
+    setReviewed([]);
     stopAudio();
     setSelectedTest(null);
     setMode(null);
@@ -425,9 +477,27 @@ const TestAudio = () => {
     return { correct, total };
   };
 
-  const goTheory = (tab) => {
+  // Abre un tema de repaso en Teoría SIN perder la pantalla de resultados: antes
+  // de salir se guarda el puntaje y qué temas lleva vistos, y se le pasa a
+  // Teoría de dónde viene para que muestre el botón «Volver a los resultados».
+  const goTheory = (tab, concept) => {
     stopAudio();
-    navigate('/teoria', tab ? { state: { tab } } : undefined);
+    const alreadySeen = reviewed.includes(concept) ? reviewed : [...reviewed, concept];
+    setReviewed(alreadySeen);
+    saveReview({
+      testId: selectedTest.id,
+      mode,
+      answers,
+      elapsed,
+      reviewed: alreadySeen,
+    });
+    navigate('/teoria', {
+      state: {
+        ...(tab ? { tab } : {}),
+        backTo: '/test-audio',
+        backLabel: 'Volver a los resultados de la prueba',
+      },
+    });
   };
 
   // ════════════════════════════════════════════════════════════════════════
@@ -585,21 +655,38 @@ const TestAudio = () => {
             <p className="ta-review-perfect"><FontAwesomeIcon icon={faCheck} /> ¡Sin errores! Dominaste todos los temas de esta prueba.</p>
           ) : (
             <>
-              <p className="ta-review-intro">Toca cada tema para ir directo al contenido teórico correspondiente:</p>
+              <p className="ta-review-intro">
+                Entra en cada tema para ver la teoría y vuelve aquí con el botón
+                «Volver a los resultados»: tu puntaje y esta lista te esperan para
+                que sigas con el siguiente.
+              </p>
               <div className="ta-review-list">
                 {wrongConcepts.map((concept, i) => {
                   const th = conceptTheory(concept);
+                  const seen = reviewed.includes(concept);
                   return (
-                    <button key={i} className="ta-review-item" onClick={() => goTheory(th.tab)}>
+                    <button
+                      key={i}
+                      className={`ta-review-item ${seen ? 'seen' : ''}`}
+                      onClick={() => goTheory(th.tab, concept)}
+                    >
                       <div>
                         <span className="ta-review-concept">{concept}</span>
                         <span className="ta-review-target">Ver: {th.label}</span>
                       </div>
-                      <FontAwesomeIcon icon={faArrowRight} />
+                      {seen
+                        ? <span className="ta-review-seen"><FontAwesomeIcon icon={faCheck} /> Revisado</span>
+                        : <FontAwesomeIcon icon={faArrowRight} />}
                     </button>
                   );
                 })}
               </div>
+              {reviewed.length > 0 && (
+                <p className="ta-review-progress">
+                  Llevas <strong>{reviewed.filter(c => wrongConcepts.includes(c)).length}</strong> de{' '}
+                  <strong>{wrongConcepts.length}</strong> temas revisados.
+                </p>
+              )}
             </>
           )}
         </div>

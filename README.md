@@ -15,6 +15,20 @@ npm run audio:verify           # comprueba en un navegador real que suenan
 npm run audio:intelligibility  # comprueba que dicen lo que deberían
 ```
 
+## Colores
+
+La paleta es la de INACAP —rojo, negro y blanco— definida como variables CSS en
+`src/components/Layout.css`. Hay un tema oscuro (fondo negro, texto blanco) y uno
+claro (fondo blanco, texto negro), con el rojo como acento en ambos.
+
+Al tocar colores hay que pasar la auditoría de contraste, que recorre todas las
+páginas en los dos temas y falla si algún texto queda por debajo de WCAG AA:
+
+```bash
+npm run check:contrast
+npm run check:review-flow      # repaso guiado tras una prueba
+```
+
 ## Desarrollo
 
 ```bash
