@@ -72,7 +72,7 @@
 .ta-test-level {
   display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
   text-transform: uppercase; color: var(--accent-gold);
-  background: rgba(240,180,41,0.12); padding: 0.15rem 0.55rem; border-radius: 1rem;
+  background: var(--emphasis-soft); padding: 0.15rem 0.55rem; border-radius: 1rem;
 }
 .ta-test-body h3 { margin: 0.4rem 0 0.25rem; color: var(--text-primary); font-size: 1.15rem; }
 .ta-test-body p { margin: 0; color: var(--text-secondary); font-size: 0.9rem; }
@@ -110,7 +110,7 @@
 .ta-mode-card.timed .ta-mode-go { color: var(--accent-gold); }
 .ta-mode-best {
   font-weight: 700; color: var(--accent-gold); display: inline-flex; align-items: center; gap: 0.4rem;
-  background: rgba(240,180,41,0.12); padding: 0.3rem 0.7rem; border-radius: 1rem;
+  background: var(--emphasis-soft); padding: 0.3rem 0.7rem; border-radius: 1rem;
 }
 
 /* ── Cronómetro / temporizador en el ejercicio ── */
@@ -119,9 +119,9 @@
   padding: 0.6rem 1rem; border-radius: 0.7rem; margin-bottom: 1rem; font-weight: 600;
   border: 1px solid var(--border-color);
 }
-.ta-timer-strip.free { background: rgba(34,211,238,0.10); color: var(--text-primary); }
+.ta-timer-strip.free { background: var(--accent-soft); color: var(--text-primary); }
 .ta-timer-strip.free svg { color: var(--accent-cyan); }
-.ta-timer-strip.timed { background: rgba(240,180,41,0.12); color: var(--text-primary); }
+.ta-timer-strip.timed { background: var(--emphasis-soft); color: var(--text-primary); }
 .ta-timer-strip.timed svg { color: var(--accent-gold); }
 .ta-timer-strip.timed.low { background: rgba(239,68,68,0.14); }
 .ta-timer-strip.timed.low svg,
@@ -130,7 +130,7 @@
 .ta-timer-bar { flex: 1 1 120px; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; min-width: 100px; }
 .ta-timer-bar > div { height: 100%; background: var(--accent-gold); transition: width 1s linear; }
 .ta-timer-strip.timed.low .ta-timer-bar > div { background: #ef4444; }
-.ta-question.active { box-shadow: 0 0 0 2px rgba(240,180,41,0.35); }
+.ta-question.active { box-shadow: 0 0 0 2px var(--emphasis-soft); }
 
 /* ── Revisión teórica (resultados) ── */
 .ta-review {
@@ -152,6 +152,20 @@
 .ta-review-concept { font-weight: 700; color: var(--text-primary); font-size: 0.92rem; }
 .ta-review-target { font-size: 0.8rem; color: var(--accent-cyan); }
 .ta-review-item svg { color: var(--accent-cyan); flex-shrink: 0; }
+
+/* Tema ya visitado durante el repaso: se marca sin ocultarlo, porque el alumno
+   puede querer volver a entrar. El color verde es el mismo «correcto» que ya usa
+   el resto de la sección. */
+.ta-review-item.seen { border-color: rgba(34, 197, 94, 0.45); }
+.ta-review-seen {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  font-size: 0.78rem; font-weight: 700; color: #22c55e; flex-shrink: 0;
+}
+.ta-review-seen svg { color: #22c55e; }
+.ta-review-progress {
+  margin: 0.9rem 0 0; font-size: 0.85rem; color: var(--text-secondary);
+}
+.ta-review-progress strong { color: var(--text-primary); }
 
 /* ── Tiempo en resultados ── */
 .ta-result-time {
@@ -176,7 +190,7 @@
 .ta-test-tag { font-weight: 700; color: var(--text-primary); }
 .ta-progress-tag {
   font-size: 0.82rem; font-weight: 600; color: var(--accent-cyan);
-  background: rgba(34,211,238,0.12); padding: 0.25rem 0.7rem; border-radius: 1rem;
+  background: var(--accent-soft); padding: 0.25rem 0.7rem; border-radius: 1rem;
 }
 .ta-progress-bar {
   height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; margin-bottom: 1.25rem;
@@ -186,21 +200,21 @@
 /* ── Reproductor ── */
 .ta-player-card {
   display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-  background: linear-gradient(135deg, rgba(34,211,238,0.10), rgba(240,180,41,0.08));
+  background: linear-gradient(135deg, var(--accent-soft), var(--emphasis-soft));
   border: 1px solid var(--border-color);
   border-radius: 1rem; padding: 1.1rem 1.25rem; margin-bottom: 1.25rem;
 }
 .ta-player-icon {
   width: 52px; height: 52px; border-radius: 50%;
   display: grid; place-items: center; font-size: 1.4rem;
-  background: var(--accent-cyan); color: #04222a; flex-shrink: 0;
+  background: var(--accent-cyan); color: var(--accent-contrast); flex-shrink: 0;
 }
 .ta-player-info { flex: 1; min-width: 180px; }
 .ta-player-info h2 { margin: 0 0 0.2rem; font-size: 1.05rem; color: var(--text-primary); }
 .ta-player-info p { margin: 0; font-size: 0.85rem; color: var(--text-secondary); }
 .ta-player-controls { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
 .ta-play-btn {
-  background: var(--accent-cyan); color: #04222a; border: none;
+  background: var(--accent-cyan); color: var(--accent-contrast); border: none;
   padding: 0.6rem 1.2rem; border-radius: 0.6rem; font-weight: 700; cursor: pointer;
   display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem;
   transition: filter 0.15s ease;
@@ -210,6 +224,20 @@
 .ta-play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .ta-plays { font-size: 0.78rem; color: var(--text-secondary); font-weight: 600; }
 .ta-plays.used { color: #ef4444; display: flex; align-items: center; gap: 0.35rem; }
+
+/* Aviso cuando el audio no llega a sonar (no se descuenta la reproducción) */
+.ta-audio-error {
+  display: flex; align-items: flex-start; gap: 0.65rem;
+  background: rgba(239, 68, 68, 0.10);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  border-left: 4px solid #ef4444;
+  border-radius: 0.75rem;
+  padding: 0.8rem 1rem;
+  margin: -0.5rem 0 1.25rem;
+  color: var(--text-primary);
+  font-size: 0.88rem; line-height: 1.45;
+}
+.ta-audio-error svg { color: #ef4444; margin-top: 0.15rem; flex-shrink: 0; }
 
 /* ── Preguntas ── */
 .ta-questions { display: flex; flex-direction: column; gap: 1rem; }
@@ -223,7 +251,7 @@
 .ta-q-head { display: flex; gap: 0.7rem; align-items: flex-start; margin-bottom: 0.85rem; }
 .ta-q-num {
   flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
-  background: var(--accent-gold); color: #2a1e02; font-weight: 800;
+  background: var(--accent-gold); color: var(--emphasis-contrast); font-weight: 800;
   display: grid; place-items: center; font-size: 0.9rem;
 }
 .ta-q-head h3 { margin: 0; font-size: 1rem; color: var(--text-primary); line-height: 1.35; }
@@ -270,7 +298,7 @@
 .ta-concept {
   margin-left: auto; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
   letter-spacing: 0.03em; color: var(--accent-cyan);
-  background: rgba(34,211,238,0.14); padding: 0.18rem 0.6rem; border-radius: 1rem;
+  background: var(--accent-soft); padding: 0.18rem 0.6rem; border-radius: 1rem;
 }
 .ta-correct-answer { margin: 0 0 0.4rem; color: var(--text-secondary); font-size: 0.9rem; }
 .ta-correct-answer strong { color: #22c55e; }
@@ -288,7 +316,7 @@
   color: var(--accent-gold); padding: 0.75rem; border-radius: 0.8rem; cursor: pointer;
   font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
 }
-.ta-reveal-btn:hover { background: rgba(240,180,41,0.1); }
+.ta-reveal-btn:hover { background: var(--emphasis-soft); }
 .ta-transcript {
   background: var(--bg-card); border: 1px solid var(--border-color);
   border-radius: 0.9rem; padding: 1.1rem 1.25rem;
@@ -302,7 +330,7 @@
 }
 .ta-transcript-actions { margin-bottom: 0.6rem; }
 .ta-translate-btn {
-  background: var(--accent-gold); color: #2a1e02; border: none;
+  background: var(--accent-gold); color: var(--emphasis-contrast); border: none;
   padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 700; cursor: pointer;
   display: inline-flex; align-items: center; gap: 0.5rem;
 }
@@ -320,7 +348,7 @@
   transition: filter 0.15s ease, opacity 0.15s ease;
 }
 .ta-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.ta-btn-primary { background: var(--accent-cyan); color: #04222a; }
+.ta-btn-primary { background: var(--accent-cyan); color: var(--accent-contrast); }
 .ta-btn-primary:hover:not(:disabled) { filter: brightness(1.1); }
 .ta-btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); }
 .ta-btn-secondary:hover:not(:disabled) { border-color: var(--accent-cyan); }
@@ -331,7 +359,7 @@
   border-radius: 1.25rem; padding: 2.25rem 1.5rem; margin-top: 1rem;
 }
 .ta-result-card.pass { border-color: rgba(34,197,94,0.5); }
-.ta-result-card.fail { border-color: rgba(240,180,41,0.5); }
+.ta-result-card.fail { border-color: var(--emphasis-soft); }
 .ta-result-trophy { font-size: 3rem; color: var(--accent-gold); margin-bottom: 0.75rem; }
 .ta-result-card h1 { margin: 0 0 0.75rem; color: var(--text-primary); font-size: 1.6rem; }
 .ta-result-score { font-size: 3rem; font-weight: 800; color: var(--accent-cyan); line-height: 1; }

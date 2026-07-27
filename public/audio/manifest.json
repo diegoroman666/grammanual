@@ -1,0 +1,184 @@
+{
+  "audios": {
+    "t1-e1": {
+      "bytes": 115566,
+      "seconds": 28.8,
+      "sha": "3e5856f24e3b935c",
+      "voice": "en-us+f5"
+    },
+    "t1-e10": {
+      "bytes": 122358,
+      "seconds": 30.5,
+      "sha": "a50be32ae8b9da23",
+      "voice": "en-us+edward"
+    },
+    "t1-e2": {
+      "bytes": 110446,
+      "seconds": 27.6,
+      "sha": "84d00d814d34d014",
+      "voice": "en-us+edward"
+    },
+    "t1-e3": {
+      "bytes": 110132,
+      "seconds": 27.5,
+      "sha": "f25919d51fb4d0e1",
+      "voice": "en-gb-x-rp+f2"
+    },
+    "t1-e4": {
+      "bytes": 113894,
+      "seconds": 28.4,
+      "sha": "51263105c8cb63ea",
+      "voice": "en-us+edward"
+    },
+    "t1-e5": {
+      "bytes": 108774,
+      "seconds": 27.1,
+      "sha": "12a5870f46bdc718",
+      "voice": "en-us+f2"
+    },
+    "t1-e6": {
+      "bytes": 115252,
+      "seconds": 28.8,
+      "sha": "1b7f802d07ed86e1",
+      "voice": "en-gb-x-rp+edward"
+    },
+    "t1-e7": {
+      "bytes": 113371,
+      "seconds": 28.3,
+      "sha": "0b1b2a61ae992581",
+      "voice": "en-us+f5"
+    },
+    "t1-e8": {
+      "bytes": 111386,
+      "seconds": 27.8,
+      "sha": "120e209778becb64",
+      "voice": "en-us+m6"
+    },
+    "t1-e9": {
+      "bytes": 118387,
+      "seconds": 29.5,
+      "sha": "551a123f7753fac4",
+      "voice": "en-gb-x-rp+f2"
+    },
+    "t2-e1": {
+      "bytes": 114939,
+      "seconds": 28.7,
+      "sha": "1953eed0de4302e0",
+      "voice": "en-gb-x-rp+f2"
+    },
+    "t2-e10": {
+      "bytes": 116611,
+      "seconds": 29.1,
+      "sha": "cebfcfc309d2f7a0",
+      "voice": "en-us+edward"
+    },
+    "t2-e2": {
+      "bytes": 116402,
+      "seconds": 29.0,
+      "sha": "82ea48d454986903",
+      "voice": "en-us+edward"
+    },
+    "t2-e3": {
+      "bytes": 116088,
+      "seconds": 28.9,
+      "sha": "e897fa32722e3767",
+      "voice": "en-gb-x-rp+edward"
+    },
+    "t2-e4": {
+      "bytes": 113267,
+      "seconds": 28.3,
+      "sha": "778653224861268a",
+      "voice": "en-us+f2"
+    },
+    "t2-e5": {
+      "bytes": 109610,
+      "seconds": 27.3,
+      "sha": "0d8cfd7e1214752c",
+      "voice": "en-us+f5"
+    },
+    "t2-e6": {
+      "bytes": 112327,
+      "seconds": 28.0,
+      "sha": "f4adb85cfd4f5374",
+      "voice": "en-gb-x-rp+edward"
+    },
+    "t2-e7": {
+      "bytes": 112640,
+      "seconds": 28.1,
+      "sha": "c3f926c8947d5405",
+      "voice": "en-us+f5"
+    },
+    "t2-e8": {
+      "bytes": 117656,
+      "seconds": 29.4,
+      "sha": "f0cd8d9a2eb71c8b",
+      "voice": "en-us+m6"
+    },
+    "t2-e9": {
+      "bytes": 123402,
+      "seconds": 30.8,
+      "sha": "0ad05555f24b7ef6",
+      "voice": "en-gb-x-rp+f2"
+    },
+    "t3-e1": {
+      "bytes": 133538,
+      "seconds": 33.3,
+      "sha": "c00658244efad746",
+      "voice": "en-gb-x-rp+edward"
+    },
+    "t3-e10": {
+      "bytes": 130508,
+      "seconds": 32.6,
+      "sha": "8b4355979c7a8b1c",
+      "voice": "en-gb-x-rp+edward"
+    },
+    "t3-e2": {
+      "bytes": 122462,
+      "seconds": 30.6,
+      "sha": "9105981004a17cc4",
+      "voice": "en-us+f5"
+    },
+    "t3-e3": {
+      "bytes": 113267,
+      "seconds": 28.3,
+      "sha": "7cb0c31f01674c24",
+      "voice": "en-gb-x-rp+f2"
+    },
+    "t3-e4": {
+      "bytes": 108565,
+      "seconds": 27.1,
+      "sha": "63be007025c19756",
+      "voice": "en-us+edward"
+    },
+    "t3-e5": {
+      "bytes": 119536,
+      "seconds": 29.8,
+      "sha": "f441f93dc3411fff",
+      "voice": "en-us+f2"
+    },
+    "t3-e6": {
+      "bytes": 125597,
+      "seconds": 31.3,
+      "sha": "81bb2a7baddb20c7",
+      "voice": "en-gb-x-rp+edward"
+    },
+    "t3-e7": {
+      "bytes": 113894,
+      "seconds": 28.4,
+      "sha": "a55638ce61698259",
+      "voice": "en-us+edward"
+    },
+    "t3-e8": {
+      "bytes": 129045,
+      "seconds": 32.2,
+      "sha": "1cf6d0b466c1cade",
+      "voice": "en-gb-x-rp+f2"
+    },
+    "t3-e9": {
+      "bytes": 121208,
+      "seconds": 30.2,
+      "sha": "794e68e46fbcbc4a",
+      "voice": "en-us+f5"
+    }
+  }
+}

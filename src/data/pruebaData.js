@@ -246,10 +246,18 @@ export const modules = [
   },
 ];
 
+// Colores de nivel. Se expresan como variables CSS (definidas en Layout.css) en
+// vez de valores fijos porque se aplican como estilos en línea y tienen que
+// cambiar con el tema: un color pensado para fondo oscuro se vuelve ilegible
+// sobre el blanco del tema claro.
+//
+// Los tres niveles se distinguen por intensidad dentro de la paleta INACAP
+// (gris → blanco/negro → rojo), no por tonos ajenos como el azul o el morado que
+// había antes y que no llegaban al contraste mínimo sobre el fondo oscuro.
 export const levelMeta = {
-  beginner:     { label: 'Principiante', color: '#27ae60', bg: 'rgba(39,174,96,0.12)',   border: '#27ae60', emoji: '🌱', ids: ['b1','b2','b3','b4','b5'] },
-  intermediate: { label: 'Intermedio',   color: '#2980b9', bg: 'rgba(41,128,185,0.12)',  border: '#2980b9', emoji: '🚀', ids: ['i1','i2','i3','i4','i5'] },
-  expert:       { label: 'Experto',       color: '#8e44ad', bg: 'rgba(142,68,173,0.12)', border: '#8e44ad', emoji: '🏆', ids: ['e1','e2','e3','e4'] },
+  beginner:     { label: 'Principiante', color: 'var(--level-beginner)',     bg: 'var(--level-beginner-bg)',     border: 'var(--level-beginner)',     emoji: '🌱', ids: ['b1','b2','b3','b4','b5'] },
+  intermediate: { label: 'Intermedio',   color: 'var(--level-intermediate)', bg: 'var(--level-intermediate-bg)', border: 'var(--level-intermediate)', emoji: '🚀', ids: ['i1','i2','i3','i4','i5'] },
+  expert:       { label: 'Experto',      color: 'var(--level-expert)',       bg: 'var(--level-expert-bg)',       border: 'var(--level-expert)',       emoji: '🏆', ids: ['e1','e2','e3','e4'] },
 };
 
 export const getModuleById = (id) => modules.find(m => m.id === id);

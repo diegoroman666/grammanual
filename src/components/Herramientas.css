@@ -164,10 +164,14 @@ table.herramientas-table td {
 
 .icon-btn-sm:hover { transform: translateY(-1px); }
 
-.icon-btn-info    { background: #17a2b8; color: #fff; }
-.icon-btn-warning { background: #ffc107; color: #000; }
-.icon-btn-success { background: #28a745; color: #fff; }
-.icon-btn-secondary { background: #6c757d; color: #fff; }
+/* Botones de icono de cada celda. Pasan a la paleta del tema por dos motivos:
+   el turquesa y el verde de antes quedaban en 3,04:1 y 3,13:1 con su texto
+   blanco —por debajo del mínimo—, y además eran colores ajenos a INACAP.
+   El color del texto sale de una variable porque el fondo cambia con el tema. */
+.icon-btn-info      { background: var(--accent);         color: var(--accent-contrast); }
+.icon-btn-warning   { background: var(--emphasis);       color: var(--emphasis-contrast); }
+.icon-btn-success   { background: var(--success);        color: var(--bg-primary); }
+.icon-btn-secondary { background: var(--text-secondary); color: var(--bg-primary); }
 
 @media (max-width: 640px) {
   .herramientas-header h1 { font-size: 1.4rem; }

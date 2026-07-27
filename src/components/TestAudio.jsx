@@ -9,10 +9,27 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { tests, TOTAL_QUESTIONS } from '../data/testAudioData';
 import { translateText } from '../services/translateApi';
+import { makeReviewSession, theoryNavState } from '../services/reviewSession';
 import './TestAudio.css';
 
 const MAX_PLAYS = 3;         // El audio se puede escuchar como máximo 3 veces
 const TIME_PER_EX = 6 * 60;  // 6 minutos por ejercicio (5 preguntas) → 1 hora por prueba (10 ejercicios)
+
+// ─── Fuente del audio ─────────────────────────────────────────────────────────
+// Cada ejercicio tiene un MP3 real pregenerado en /audio/<id>.mp3 (ver
+// scripts/generate-audio.py). Se usa SIEMPRE que se pueda porque suena igual en
+// todos los dispositivos.
+//
+// Antes esta sección dependía solo de la Web Speech API (speechSynthesis) y ahí
+// estaba el fallo: en un navegador sin voces en inglés instaladas —habitual en
+// Android, en Linux y en el WebView de la app— getVoices() devuelve una lista
+// vacía y cada speak() acaba en "synthesis-failed". El alumno pulsaba
+// «Escuchar», no oía nada y encima perdía una de sus 3 reproducciones.
+//
+// Ahora la síntesis del navegador queda solo como alternativa: se usa si el MP3
+// no llega a cargar (red caída, archivo no desplegado) y únicamente si el
+// dispositivo tiene voces de verdad.
+const audioSrc = (exercise) => `${import.meta.env.BASE_URL}audio/${exercise.id}.mp3`;
 
 // ─── Selección de voz ─────────────────────────────────────────────────────────
 const FEMALE_HINTS = ['female', 'samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona', 'zira', 'susan', 'catherine'];
@@ -51,6 +68,12 @@ function conceptTheory(concept) {
 
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 const bestKey = (id) => `ta-best-${id}`;
+
+// Repaso guiado tras la prueba: al entrar en un tema desde los resultados se
+// navega a /teoria y este componente se desmonta, así que el puntaje se guarda
+// para recuperarlo al volver. Ver src/services/reviewSession.js.
+// Vale para los dos modos, contrarreloj y tiempo libre.
+const review = makeReviewSession('ta-review-session');
 
 // Trocea un texto en oraciones (para encolar utterances cortas y fiables).
 // Si alguna oración fuese muy larga, la parte además por comas.
@@ -106,22 +129,33 @@ function shuffleOptions(options, exId, qi) {
 const TestAudio = () => {
   const navigate = useNavigate();
 
-  const [selectedTest, setSelectedTest] = useState(null);
-  const [mode, setMode] = useState(null);          // null | 'timed' | 'free'
+  // Si el alumno estaba repasando los temas fallados, se recupera su resultado
+  // para devolverlo a la pantalla del puntaje en vez de a la lista de pruebas.
+  const restored = useRef(review.load()).current;
+  const restoredTest = restored ? tests.find(t => t.id === restored.testId) : null;
+
+  const [selectedTest, setSelectedTest] = useState(restoredTest || null);
+  const [mode, setMode] = useState(restoredTest ? restored.mode : null);  // null | 'timed' | 'free'
   const [exerciseIndex, setExerciseIndex] = useState(0);
-  const [answers, setAnswers] = useState({});      // key `${exId}-${qi}` -> option ('__timeout__' si se agotó el tiempo)
+  const [answers, setAnswers] = useState(restoredTest ? restored.answers : {});  // key `${exId}-${qi}` -> option ('__timeout__' si se agotó el tiempo)
   const [plays, setPlays] = useState(0);
-  const [audioStatus, setAudioStatus] = useState('idle');
+  const [audioStatus, setAudioStatus] = useState('idle');  // idle | loading | playing | error
+  const [audioError, setAudioError] = useState('');
   const [showTranscript, setShowTranscript] = useState(false);
   const [translation, setTranslation] = useState('');
   const [translating, setTranslating] = useState(false);
-  const [finished, setFinished] = useState(false);
+  const [finished, setFinished] = useState(Boolean(restoredTest));
   const [voices, setVoices] = useState([]);
   const [timeLeft, setTimeLeft] = useState(TIME_PER_EX);
-  const [elapsed, setElapsed] = useState(0);
+  const [elapsed, setElapsed] = useState(restoredTest ? restored.elapsed : 0);
+  // Temas que el alumno ya abrió desde las sugerencias de repaso.
+  const [reviewed, setReviewed] = useState(restoredTest ? (restored.reviewed || []) : []);
 
   const rotationRef = useRef(0);
   const keepAliveRef = useRef(null);
+  const audioElRef = useRef(null);   // <audio> del MP3 del ejercicio actual
+  const startingRef = useRef(false); // evita dobles clics mientras arranca
+  const attemptRef = useRef(null);   // intento de reproducción en curso
 
   const exercise = selectedTest ? selectedTest.exercises[exerciseIndex] : null;
   // Primera pregunta sin responder del ejercicio actual (objetivo del cronómetro)
@@ -129,7 +163,7 @@ const TestAudio = () => {
     ? exercise.questions.findIndex((_, qi) => !answers[`${exercise.id}-${qi}`])
     : -1;
 
-  // Cargar voces del navegador
+  // Cargar voces del navegador (solo se usan como alternativa al MP3)
   useEffect(() => {
     if (!('speechSynthesis' in window)) return;
     const load = () => setVoices(window.speechSynthesis.getVoices());
@@ -137,14 +171,23 @@ const TestAudio = () => {
     window.speechSynthesis.onvoiceschanged = load;
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
-      if (keepAliveRef.current) { clearInterval(keepAliveRef.current); keepAliveRef.current = null; }
       window.speechSynthesis.cancel();
     };
+  }, []);
+
+  // Al salir de la sección: cortar cualquier audio y limpiar temporizadores.
+  useEffect(() => () => {
+    if (keepAliveRef.current) { clearInterval(keepAliveRef.current); keepAliveRef.current = null; }
+    const el = audioElRef.current;
+    if (el) el.pause();
   }, []);
 
   const stopAudio = useCallback(() => {
     if (keepAliveRef.current) { clearInterval(keepAliveRef.current); keepAliveRef.current = null; }
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    const el = audioElRef.current;
+    if (el) { el.pause(); el.currentTime = 0; }
+    startingRef.current = false;
     setAudioStatus('idle');
   }, []);
 
@@ -197,10 +240,13 @@ const TestAudio = () => {
     setPlays(0);
     setShowTranscript(false);
     setTranslation('');
+    setAudioError('');
     stopAudio();
   }, [stopAudio]);
 
   const openTest = (test) => {
+    review.clear();          // empieza una prueba nueva: el repaso anterior ya no vale
+    setReviewed([]);
     setSelectedTest(test);
     setMode(null);
     setExerciseIndex(0);
@@ -212,6 +258,8 @@ const TestAudio = () => {
   };
 
   const startWithMode = (m) => {
+    review.clear();
+    setReviewed([]);
     setMode(m);
     setExerciseIndex(0);
     setAnswers({});
@@ -223,28 +271,43 @@ const TestAudio = () => {
   };
 
   const backToList = () => {
+    review.clear();
+    setReviewed([]);
     stopAudio();
     setSelectedTest(null);
     setMode(null);
     setFinished(false);
   };
 
-  const playAudio = () => {
-    const synth = window.speechSynthesis;
-    if (!('speechSynthesis' in window) || !synth || !exercise) {
-      alert('Tu navegador no soporta la lectura de audio.');
-      return;
-    }
-    if (plays >= MAX_PLAYS) return;
+  // Devuelve la reproducción gastada y avisa. Solo actúa una vez por intento:
+  // el mismo fallo puede llegar por dos vías (promesa rechazada y evento error)
+  // y el alumno no debe recuperar dos reproducciones por un único clic.
+  const failAttempt = useCallback((attempt, message) => {
+    if (!attempt || attempt.settled) return;
+    attempt.settled = true;
+    startingRef.current = false;
+    setPlays(p => Math.max(0, p - 1));
+    setAudioStatus('error');
+    setAudioError(message);
+  }, []);
 
-    // Limpia cualquier reproducción o keep-alive previo.
+  // ── Alternativa: leer el texto con la voz del navegador ─────────────────────
+  // Solo se llega aquí si el MP3 no se pudo reproducir. Devuelve true si al
+  // menos consiguió arrancar la síntesis.
+  const speakWithBrowser = useCallback((attempt) => {
+    const synth = window.speechSynthesis;
+    if (!('speechSynthesis' in window) || !synth || !exercise) return false;
+
+    // Sin voces instaladas la síntesis falla en silencio: mejor no intentarlo y
+    // avisar al alumno en vez de gastarle una reproducción muda.
+    const available = synth.getVoices();
+    const voicePool = available && available.length ? available : voices;
+    if (!voicePool || voicePool.length === 0) return false;
+    if (available && available.length && voices.length === 0) setVoices(available);
+
     if (keepAliveRef.current) { clearInterval(keepAliveRef.current); keepAliveRef.current = null; }
     synth.cancel();
 
-    // Voces: en móviles pueden llegar tarde; usa las disponibles ahora mismo.
-    const available = synth.getVoices();
-    if (available && available.length && voices.length === 0) setVoices(available);
-    const voicePool = available && available.length ? available : voices;
     const voice = pickVoice(voicePool, exercise, rotationRef.current + exerciseIndex);
 
     // Se trocea el texto en oraciones y se encolan varias utterances cortas.
@@ -252,11 +315,19 @@ const TestAudio = () => {
     // y es mucho más fiable en celular que un único enunciado largo.
     const chunks = splitSentences(exercise.audioText);
     let remaining = chunks.length;
-    const onChunkDone = () => {
+    let failed = 0;
+    const onChunkDone = (errored) => {
+      if (errored) failed += 1;
       remaining -= 1;
       if (remaining <= 0) {
         if (keepAliveRef.current) { clearInterval(keepAliveRef.current); keepAliveRef.current = null; }
-        setAudioStatus('idle');
+        // Si TODOS los fragmentos fallaron, no sonó nada: se devuelve la
+        // reproducción en vez de dar por buena una escucha que no existió.
+        if (failed === chunks.length) {
+          failAttempt(attempt, 'No se pudo reproducir el audio en este dispositivo. Revisa tu conexión y vuelve a intentarlo: no se te ha descontado esta reproducción.');
+        } else {
+          setAudioStatus('idle');
+        }
       }
     };
 
@@ -268,8 +339,8 @@ const TestAudio = () => {
       u.pitch = exercise.pitch ?? 1;
       u.rate = exercise.rate ?? 0.9;
       u.volume = 1;
-      u.onend = onChunkDone;
-      u.onerror = onChunkDone;
+      u.onend = () => onChunkDone(false);
+      u.onerror = () => onChunkDone(true);
       synth.speak(u);
     });
 
@@ -280,8 +351,53 @@ const TestAudio = () => {
       synth.resume();
     }, 5000);
 
-    setAudioStatus('playing');
+    return true;
+  }, [exercise, exerciseIndex, voices, failAttempt]);
+
+  // Pasa de la pista MP3 a la voz del navegador. Si el dispositivo tampoco
+  // tiene voces, devuelve la reproducción y muestra el motivo.
+  const fallbackToSpeech = useCallback((attempt, reason) => {
+    if (!attempt || attempt.settled) return;
+    startingRef.current = false;
+    if (speakWithBrowser(attempt)) setAudioStatus('playing');
+    else failAttempt(attempt, reason);
+  }, [speakWithBrowser, failAttempt]);
+
+  // ── Reproducir el ejercicio ─────────────────────────────────────────────────
+  // Primero el MP3 del sitio (suena igual en cualquier dispositivo); si no se
+  // puede, la voz del navegador; y si tampoco, un aviso claro SIN descontar la
+  // reproducción. Nunca se queda en silencio sin explicación.
+  const playAudio = () => {
+    if (!exercise || plays >= MAX_PLAYS || startingRef.current) return;
+
+    startingRef.current = true;
+    setAudioError('');
+    setAudioStatus('loading');
+    // Se cuenta la reproducción al empezar; si resulta que no sonó nada, se
+    // devuelve (failAttempt) para no penalizar un fallo técnico.
     setPlays(p => p + 1);
+    const attempt = { settled: false };
+    attemptRef.current = attempt;
+
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+    const el = audioElRef.current;
+    if (!el) {
+      fallbackToSpeech(attempt, 'No se pudo cargar el audio de este ejercicio.');
+      return;
+    }
+
+    el.currentTime = 0;
+    // play() se lanza de forma SÍNCRONA dentro del clic: es lo que exigen
+    // iOS/Safari y las políticas de autoplay de Chrome.
+    const started = el.play();
+    if (started && typeof started.catch === 'function') {
+      started
+        .then(() => { attempt.settled = true; startingRef.current = false; })
+        .catch(() => fallbackToSpeech(attempt, 'No se pudo reproducir el audio. Comprueba el volumen del dispositivo y vuelve a intentarlo: no se te ha descontado esta reproducción.'));
+    } else {
+      startingRef.current = false;
+    }
   };
 
   const handleAnswer = (qi, option) => {
@@ -329,9 +445,23 @@ const TestAudio = () => {
     return { correct, total };
   };
 
-  const goTheory = (tab) => {
+  // Abre un tema de repaso en Teoría SIN perder la pantalla de resultados: antes
+  // de salir se guarda el puntaje y qué temas lleva vistos, y se le pasa a
+  // Teoría de dónde viene para que muestre el botón «Volver a los resultados».
+  const goTheory = (tab, concept) => {
     stopAudio();
-    navigate('/teoria', tab ? { state: { tab } } : undefined);
+    const alreadySeen = reviewed.includes(concept) ? reviewed : [...reviewed, concept];
+    setReviewed(alreadySeen);
+    review.save({
+      testId: selectedTest.id,
+      mode,
+      answers,
+      elapsed,
+      reviewed: alreadySeen,
+    });
+    navigate('/teoria', {
+      state: theoryNavState(tab, '/test-audio', 'Volver a los resultados de la prueba'),
+    });
   };
 
   // ════════════════════════════════════════════════════════════════════════
@@ -360,6 +490,7 @@ const TestAudio = () => {
             <li>El audio se puede escuchar como <strong>máximo {MAX_PLAYS} veces</strong>: escucha con atención.</li>
             <li>Antes de empezar eliges modo: <strong>6 min por ejercicio</strong> (1 h por prueba) o <strong>tiempo libre con cronómetro</strong>.</li>
             <li>Cada ejercicio usa una <strong>voz distinta</strong> (acentos y tonos variados).</li>
+            <li>El audio es un <strong>archivo grabado</strong> del propio sitio: suena igual en el móvil y en el PC, aunque tu navegador no tenga voces instaladas. Si alguna vez fallara, <strong>no se te descuenta</strong> la reproducción.</li>
             <li>Las alternativas están en <strong>inglés</strong> e incluyen palabras <strong>mal escritas a propósito</strong>.</li>
             <li>No verás el <strong>texto ni la traducción</strong> hasta responder las 5 preguntas, y <strong>no se puede retroceder</strong> a un audio anterior.</li>
             <li>Al terminar, cada tema te enlaza al <strong>contenido teórico</strong> para saber más.</li>
@@ -488,21 +619,38 @@ const TestAudio = () => {
             <p className="ta-review-perfect"><FontAwesomeIcon icon={faCheck} /> ¡Sin errores! Dominaste todos los temas de esta prueba.</p>
           ) : (
             <>
-              <p className="ta-review-intro">Toca cada tema para ir directo al contenido teórico correspondiente:</p>
+              <p className="ta-review-intro">
+                Entra en cada tema para ver la teoría y vuelve aquí con el botón
+                «Volver a los resultados»: tu puntaje y esta lista te esperan para
+                que sigas con el siguiente.
+              </p>
               <div className="ta-review-list">
                 {wrongConcepts.map((concept, i) => {
                   const th = conceptTheory(concept);
+                  const seen = reviewed.includes(concept);
                   return (
-                    <button key={i} className="ta-review-item" onClick={() => goTheory(th.tab)}>
+                    <button
+                      key={i}
+                      className={`ta-review-item ${seen ? 'seen' : ''}`}
+                      onClick={() => goTheory(th.tab, concept)}
+                    >
                       <div>
                         <span className="ta-review-concept">{concept}</span>
                         <span className="ta-review-target">Ver: {th.label}</span>
                       </div>
-                      <FontAwesomeIcon icon={faArrowRight} />
+                      {seen
+                        ? <span className="ta-review-seen"><FontAwesomeIcon icon={faCheck} /> Revisado</span>
+                        : <FontAwesomeIcon icon={faArrowRight} />}
                     </button>
                   );
                 })}
               </div>
+              {reviewed.length > 0 && (
+                <p className="ta-review-progress">
+                  Llevas <strong>{reviewed.filter(c => wrongConcepts.includes(c)).length}</strong> de{' '}
+                  <strong>{wrongConcepts.length}</strong> temas revisados.
+                </p>
+              )}
             </>
           )}
         </div>
@@ -563,6 +711,26 @@ const TestAudio = () => {
 
       {/* Reproductor */}
       <div className="ta-player-card">
+        {/* El MP3 del ejercicio, servido por el propio sitio. Es la fuente
+            principal: no depende de que el dispositivo tenga voces instaladas. */}
+        <audio
+          ref={audioElRef}
+          key={exercise.id}
+          src={audioSrc(exercise)}
+          preload="auto"
+          onPlaying={() => { startingRef.current = false; setAudioStatus('playing'); setAudioError(''); }}
+          onEnded={() => setAudioStatus('idle')}
+          onError={() => {
+            // El archivo no cargó (404, red caída, formato no soportado). Si el
+            // alumno no había pulsado nada todavía no se le molesta: el fallo se
+            // gestiona cuando pulse «Escuchar».
+            if (audioStatus !== 'loading' && audioStatus !== 'playing') return;
+            fallbackToSpeech(
+              attemptRef.current,
+              'No se pudo cargar el audio de este ejercicio. Revisa tu conexión y vuelve a intentarlo: no se te ha descontado esta reproducción.',
+            );
+          }}
+        />
         <div className="ta-player-icon"><FontAwesomeIcon icon={faHeadphones} /></div>
         <div className="ta-player-info">
           <h2>Ejercicio de audio {exerciseIndex + 1}</h2>
@@ -574,8 +742,8 @@ const TestAudio = () => {
               <FontAwesomeIcon icon={faStop} /> Detener
             </button>
           ) : (
-            <button className="ta-play-btn" onClick={playAudio} disabled={plays >= MAX_PLAYS}>
-              <FontAwesomeIcon icon={faVolumeUp} /> Escuchar
+            <button className="ta-play-btn" onClick={playAudio} disabled={plays >= MAX_PLAYS || audioStatus === 'loading'}>
+              <FontAwesomeIcon icon={faVolumeUp} /> {audioStatus === 'loading' ? 'Cargando…' : 'Escuchar'}
             </button>
           )}
           <span className={`ta-plays ${plays >= MAX_PLAYS ? 'used' : ''}`}>
@@ -585,6 +753,13 @@ const TestAudio = () => {
           </span>
         </div>
       </div>
+
+      {audioError && (
+        <div className="ta-audio-error" role="alert">
+          <FontAwesomeIcon icon={faExclamationTriangle} />
+          <span>{audioError}</span>
+        </div>
+      )}
 
       {/* Preguntas */}
       <div className="ta-questions">

@@ -46,3 +46,7 @@ dist-ssr/
 Thumbs.db       # Archivos de miniaturas de Windows
 # Local Netlify folder
 .netlify
+
+# Python (scripts de generación/verificación de audio)
+__pycache__/
+*.pyc
